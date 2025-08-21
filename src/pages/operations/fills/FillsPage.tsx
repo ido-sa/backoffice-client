@@ -8,6 +8,9 @@ import { FillAlert } from '@/types/alerts'
 import { FillFilters } from '@/types/fills'
 import { useFillsAlerts, useFillsData } from './hooks/useFillsData'
 import { fillsAlertColumns } from './constants'
+import MockClient from '@/services/mocks/mockClient'
+
+const mockClient = new MockClient()
 
 const FillsPage: React.FC = () => {
   const [filters, setFilters] = useState<FillFilters>({
@@ -17,18 +20,54 @@ const FillsPage: React.FC = () => {
   // Fetch alerts
   const alertsQuery = useFillsAlerts()
   
+  // Fetch filter options for mapping
+  const instrumentsQuery = useQuery({
+    queryKey: ['instruments'],
+    queryFn: () => mockClient.getInstruments({}),
+  })
+
+  const expirationsQuery = useQuery({
+    queryKey: ['expirations'],
+    queryFn: () => mockClient.getExpirations({}),
+  })
+
+  const strikesQuery = useQuery({
+    queryKey: ['strikes'],
+    queryFn: () => mockClient.getStrikes({}),
+  })
+
+  const accountsQuery = useQuery({
+    queryKey: ['accounts'],
+    queryFn: () => mockClient.getAccounts({}),
+  })
+  
   // Fetch fills data when filters are applied
   const fillsQuery = useFillsData(filters)
 
   const handleAlertClick = (alert: FillAlert) => {
     // Parse contract name to extract instrument, expiration, strike
+    // Contract name format: "ES JUN25 4500"
     const contractParts = alert.contractName.split(' ')
+    console.log('Alert clicked:', alert)
+    console.log('Contract parts:', contractParts)
+    
+    // Map contract parts to filter option IDs
+    const instrument = instrumentsQuery.data?.items.find(inst => inst.name === contractParts[0])?.id
+    const expiration = expirationsQuery.data?.items.find(exp => exp.name === contractParts[1])?.id
+    const strike = strikesQuery.data?.items.find(str => str.name === contractParts[2])?.id
+    
+    console.log('Mapped values:', { instrument, expiration, strike })
+    console.log('Available strikes:', strikesQuery.data?.items.map(s => s.name))
+    
     const newFilters: FillFilters = {
       date: alert.date,
-      instrument: contractParts[0] || undefined,
-      expiration: contractParts[1] || undefined,
-      strike: contractParts[2] || undefined,
+      account: alert.accountId,
+      instrument: instrument,
+      expiration: expiration,
+      strike: strike,
     }
+    
+    console.log('New filters:', newFilters)
     setFilters(newFilters)
   }
 

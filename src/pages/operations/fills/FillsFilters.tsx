@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Box,
   Grid,
@@ -28,6 +28,14 @@ const FillsFilters: React.FC<FillsFiltersProps> = ({
   onApply,
   loading = false,
 }) => {
+  // Local state for filter changes
+  const [localFilters, setLocalFilters] = useState<FillFilters>(filters)
+
+  // Update local filters when props change (e.g., from alert click)
+  useEffect(() => {
+    setLocalFilters(filters)
+  }, [filters])
+
   // Fetch filter options
   const accountsQuery = useQuery({
     queryKey: ['accounts'],
@@ -40,19 +48,19 @@ const FillsFilters: React.FC<FillsFiltersProps> = ({
   })
 
   const expirationsQuery = useQuery({
-    queryKey: ['expirations', filters.instrument],
+    queryKey: ['expirations', localFilters.instrument],
     queryFn: () => mockClient.getExpirations({}),
-    enabled: !!filters.instrument,
+    enabled: !!localFilters.instrument,
   })
 
   const strikesQuery = useQuery({
-    queryKey: ['strikes', filters.instrument, filters.expiration],
+    queryKey: ['strikes', localFilters.instrument, localFilters.expiration],
     queryFn: () => mockClient.getStrikes({}),
-    enabled: !!filters.instrument && !!filters.expiration,
+    enabled: !!localFilters.instrument && !!localFilters.expiration,
   })
 
   const handleApply = () => {
-    onApply(filters)
+    onApply(localFilters)
   }
 
   return (
@@ -61,15 +69,15 @@ const FillsFilters: React.FC<FillsFiltersProps> = ({
         <Grid item xs={12} sm={6} md={2}>
           <DatePicker
             label="Date"
-            value={filters.date ? new Date(filters.date) : null}
+            value={localFilters.date ? new Date(localFilters.date) : null}
             onChange={(date) => {
-              const newFilters = { ...filters }
+              const newFilters = { ...localFilters }
               if (date) {
                 newFilters.date = date.toISOString().split('T')[0]
               } else {
                 delete newFilters.date
               }
-              onApply(newFilters)
+              setLocalFilters(newFilters)
             }}
             slotProps={{
               textField: {
@@ -84,10 +92,10 @@ const FillsFilters: React.FC<FillsFiltersProps> = ({
           <FormControl fullWidth size="small">
             <InputLabel>Account</InputLabel>
             <Select
-              value={filters.account || ''}
+              value={localFilters.account || ''}
               onChange={(e) => {
-                const newFilters = { ...filters, account: e.target.value || undefined }
-                onApply(newFilters)
+                const newFilters = { ...localFilters, account: e.target.value || undefined }
+                setLocalFilters(newFilters)
               }}
               label="Account"
             >
@@ -105,15 +113,15 @@ const FillsFilters: React.FC<FillsFiltersProps> = ({
           <FormControl fullWidth size="small">
             <InputLabel>Instrument</InputLabel>
             <Select
-              value={filters.instrument || ''}
+              value={localFilters.instrument || ''}
               onChange={(e) => {
                 const newFilters = { 
-                  ...filters, 
+                  ...localFilters, 
                   instrument: e.target.value || undefined,
                   expiration: undefined,
                   strike: undefined,
                 }
-                onApply(newFilters)
+                setLocalFilters(newFilters)
               }}
               label="Instrument"
             >
@@ -131,17 +139,17 @@ const FillsFilters: React.FC<FillsFiltersProps> = ({
           <FormControl fullWidth size="small">
             <InputLabel>Expiration</InputLabel>
             <Select
-              value={filters.expiration || ''}
+              value={localFilters.expiration || ''}
               onChange={(e) => {
                 const newFilters = { 
-                  ...filters, 
+                  ...localFilters, 
                   expiration: e.target.value || undefined,
                   strike: undefined,
                 }
-                onApply(newFilters)
+                setLocalFilters(newFilters)
               }}
               label="Expiration"
-              disabled={!filters.instrument}
+              disabled={!localFilters.instrument}
             >
               <MenuItem value="">All</MenuItem>
               {expirationsQuery.data?.items.map((expiration) => (
@@ -157,13 +165,13 @@ const FillsFilters: React.FC<FillsFiltersProps> = ({
           <FormControl fullWidth size="small">
             <InputLabel>Strike</InputLabel>
             <Select
-              value={filters.strike || ''}
+              value={localFilters.strike || ''}
               onChange={(e) => {
-                const newFilters = { ...filters, strike: e.target.value || undefined }
-                onApply(newFilters)
+                const newFilters = { ...localFilters, strike: e.target.value || undefined }
+                setLocalFilters(newFilters)
               }}
               label="Strike"
-              disabled={!filters.instrument || !filters.expiration}
+              disabled={!localFilters.instrument || !localFilters.expiration}
             >
               <MenuItem value="">All</MenuItem>
               {strikesQuery.data?.items.map((strike) => (

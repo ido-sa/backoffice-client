@@ -35,6 +35,13 @@ const mockStrikes: FilterOption[] = [
   { id: 'strike1', name: '4500' },
   { id: 'strike2', name: '4600' },
   { id: 'strike3', name: '4700' },
+  { id: 'strike4', name: '4800' },
+  { id: 'strike5', name: '4900' },
+  { id: 'strike6', name: '5000' },
+  { id: 'strike7', name: '5100' },
+  { id: 'strike8', name: '5200' },
+  { id: 'strike9', name: '5300' },
+  { id: 'strike10', name: '5400' },
 ]
 
 class MockClient {
@@ -51,6 +58,8 @@ class MockClient {
       date: '2025-05-12',
       brokerId: mockBrokers[i % mockBrokers.length].id,
       brokerName: mockBrokers[i % mockBrokers.length].name,
+      accountId: mockAccounts[i % mockAccounts.length].id,
+      accountName: mockAccounts[i % mockAccounts.length].name,
       contractId: generateMockId('contract'),
       contractName: `ES JUN25 ${4500 + i * 100}`,
     }))

@@ -3,6 +3,8 @@ export interface FillAlert {
   date: string
   brokerId: string
   brokerName: string
+  accountId: string
+  accountName: string
   contractId: string
   contractName: string
 }
