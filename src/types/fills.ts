@@ -30,3 +30,14 @@ export interface FillAlert {
   contractId: string
   contractName: string
 }
+
+export interface FillMatchRequest {
+  clientFillIds: string[]
+  brokerFillIds: string[]
+}
+
+export interface FillMatchResponse {
+  success: boolean
+  message: string
+  error: string | null
+}

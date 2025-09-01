@@ -1,14 +1,17 @@
 import React, { useState } from 'react'
-import { Box, Grid } from '@mui/material'
-import { useQuery } from '@tanstack/react-query'
+import { Box, Grid, Alert, Snackbar } from '@mui/material'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import AlertsPane from '@/components/common/AlertsPane'
 import FillsFilters from './FillsFilters'
 import FillsTables from './FillsTables'
+import ReconciliationButtons from '@/components/common/ReconciliationButtons'
 import { FillAlert } from '@/types/alerts'
-import { FillFilters } from '@/types/fills'
+import { FillFilters, FillMatchRequest } from '@/types/fills'
 import { useFillsAlerts, useFillsData } from './hooks/useFillsData'
 import { fillsAlertColumns } from './constants'
+import { useReconciliation } from '@/hooks/useReconciliation'
 import MockClient from '@/services/mocks/mockClient'
+import fillsApiClient from '@/services/api/fills'
 
 const mockClient = new MockClient()
 
@@ -16,6 +19,10 @@ const FillsPage: React.FC = () => {
   const [filters, setFilters] = useState<FillFilters>({
     date: new Date().toISOString().split('T')[0],
   })
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [successMessage, setSuccessMessage] = useState<string | null>(null)
+
+  const queryClient = useQueryClient()
 
   // Fetch alerts
   const alertsQuery = useFillsAlerts()
@@ -36,13 +43,71 @@ const FillsPage: React.FC = () => {
     queryFn: () => mockClient.getStrikes({}),
   })
 
-  const accountsQuery = useQuery({
-    queryKey: ['accounts'],
-    queryFn: () => mockClient.getAccounts({}),
-  })
+  // const accountsQuery = useQuery({
+  //   queryKey: ['accounts'],
+  //   queryFn: () => mockClient.getAccounts({}),
+  // })
   
   // Fetch fills data when filters are applied
   const fillsQuery = useFillsData(filters)
+
+  // Reconciliation state
+  const reconciliation = useReconciliation(
+    fillsQuery.data?.clientFills || [],
+    fillsQuery.data?.brokerFills || []
+  )
+
+  // Match mutation
+  const matchMutation = useMutation({
+    mutationFn: (request: FillMatchRequest) => fillsApiClient.matchFills(request),
+    onSuccess: (response) => {
+      if (response.success) {
+        setSuccessMessage(response.message)
+        reconciliation.clearSelection()
+        // Refetch data to update reconciliation status
+        queryClient.invalidateQueries({ queryKey: ['fills', filters] })
+      } else {
+        setErrorMessage(response.message)
+      }
+    },
+    onError: (error) => {
+      setErrorMessage(error.message || 'Failed to match fills')
+    },
+  })
+
+  // Unmatch mutation
+  const unmatchMutation = useMutation({
+    mutationFn: (request: FillMatchRequest) => fillsApiClient.unmatchFills(request),
+    onSuccess: (response) => {
+      if (response.success) {
+        setSuccessMessage(response.message)
+        reconciliation.clearSelection()
+        // Refetch data to update reconciliation status
+        queryClient.invalidateQueries({ queryKey: ['fills', filters] })
+      } else {
+        setErrorMessage(response.message)
+      }
+    },
+    onError: (error) => {
+      setErrorMessage(error.message || 'Failed to unmatch fills')
+    },
+  })
+
+  const handleMatch = () => {
+    const request: FillMatchRequest = {
+      clientFillIds: reconciliation.selectedClientIds,
+      brokerFillIds: reconciliation.selectedBrokerIds,
+    }
+    matchMutation.mutate(request)
+  }
+
+  const handleUnmatch = () => {
+    const request: FillMatchRequest = {
+      clientFillIds: reconciliation.selectedClientIds,
+      brokerFillIds: reconciliation.selectedBrokerIds,
+    }
+    unmatchMutation.mutate(request)
+  }
 
   const handleAlertClick = (alert: FillAlert) => {
     // Parse contract name to extract instrument, expiration, strike
@@ -61,7 +126,7 @@ const FillsPage: React.FC = () => {
     
     const newFilters: FillFilters = {
       date: alert.date,
-      account: alert.accountId,
+      // account: alert.accountId, // Commented out since accountsQuery is not used
       instrument: instrument,
       expiration: expiration,
       strike: strike,
@@ -98,16 +163,49 @@ const FillsPage: React.FC = () => {
             loading={fillsQuery.isLoading}
           />
           
+          <ReconciliationButtons
+            canMatch={reconciliation.canMatch}
+            canUnmatch={reconciliation.canUnmatch}
+            onMatch={handleMatch}
+            onUnmatch={handleUnmatch}
+            loading={matchMutation.isPending || unmatchMutation.isPending}
+          />
+          
           <Box sx={{ flexGrow: 1, mt: 1 }}>
             <FillsTables
               clientFills={fillsQuery.data?.clientFills || []}
               brokerFills={fillsQuery.data?.brokerFills || []}
               loading={fillsQuery.isLoading}
               error={fillsQuery.error}
+              onRowSelection={(row, side, isUnchecking) => reconciliation.handleRowSelection(row, side, isUnchecking)}
+              isSelected={reconciliation.isSelected}
             />
           </Box>
         </Grid>
       </Grid>
+
+      {/* Error and Success Messages */}
+      <Snackbar
+        open={!!errorMessage}
+        autoHideDuration={6000}
+        onClose={() => setErrorMessage(null)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        <Alert onClose={() => setErrorMessage(null)} severity="error" sx={{ width: '100%' }}>
+          {errorMessage}
+        </Alert>
+      </Snackbar>
+
+      <Snackbar
+        open={!!successMessage}
+        autoHideDuration={4000}
+        onClose={() => setSuccessMessage(null)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        <Alert onClose={() => setSuccessMessage(null)} severity="success" sx={{ width: '100%' }}>
+          {successMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   )
 }

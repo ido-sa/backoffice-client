@@ -158,6 +158,32 @@
 - Status:
   - Reconciled column reflects server status (Auto/Manual/No) - read-only, no manual override needed.
 
+### Reconciliation Interaction & Selection Behavior
+
+#### Fill Selection Rules
+- **"Auto" and "Manual" fills**: Selecting one fill automatically selects all related fills from both sides (the matched group)
+- **"No" fills**: Can manually select multiple fills from both sides independently
+- **Selection clearing**: When selecting a "No" fill, any previously selected matched group is cleared
+
+#### Visual Feedback
+- Manually selected "No" fills should be visually grouped/highlighted together
+- Matched groups should be highlighted as a unit when any member is selected
+- Hovering a row lightly highlights its matches
+
+#### Button Behavior
+- **"Match" button**: 
+  - Positioned at top middle, below filters and above tables
+  - Enabled only when at least one "No" fill from each side is selected
+  - Disabled when matched fills are selected
+- **"Unmatch" button**:
+  - Positioned at top middle, below filters and above tables
+  - Enabled only when a matched group is selected
+- **Header checkboxes**: Removed (no "select all" functionality)
+
+#### Error Handling
+- Confirmation dialogs shown only if server returns an error for match/unmatch actions
+- Graceful error display with retry options
+
 ### Data & Domain Rules (server-side, reflected client-side)
 - Contract = unique id for Instrument + Expiration (if any) + Strike (if any).
 - Fills matching: same triplet (trade_date, account_contract), same side and price; total lots must equal across matched group.
@@ -197,6 +223,12 @@
 - Transactions data
   - GET `/api/transactions/client?from=YYYY-MM-DD&to=YYYY-MM-DD&brokerId=...&page=1&pageSize=100&sort=tradeDate:asc`
   - GET `/api/transactions/broker?from=YYYY-MM-DD&to=YYYY-MM-DD&brokerId=...&page=1&pageSize=100&sort=date:asc`
+
+- Reconciliation actions:
+  - POST `/api/fills/match` - Match selected fills
+  - POST `/api/fills/unmatch` - Unmatch selected fills
+  - POST `/api/transactions/match` - Match selected transactions
+  - POST `/api/transactions/unmatch` - Unmatch selected transactions
 
 - Optional (if backend supports):
   - POST `/api/reconciliation/manual` to mark items manual or adjust groups
@@ -276,6 +308,32 @@
 - Meta option
 { "id": "b1", "name": "Broker A" }
 
+- Match/Unmatch request (fills)
+{
+  "clientFillIds": ["fc_1001", "fc_1002"],
+  "brokerFillIds": ["fb_9001", "fb_9003"]
+}
+
+- Match/Unmatch request (transactions)
+{
+  "clientTransactionIds": ["tc_7001", "tc_7002"],
+  "brokerTransactionIds": ["tb_8101", "tb_8103"]
+}
+
+- Match/Unmatch response
+{
+  "success": true,
+  "message": "Successfully matched 2 client fills with 2 broker fills",
+  "error": null
+}
+
+- Match/Unmatch error response
+{
+  "success": false,
+  "message": "Cannot match fills: different sides (Buy vs Sell)",
+  "error": "VALIDATION_ERROR"
+}
+
 ### Query Params & Pagination
 - Common: `page`, `pageSize`, `sort` (e.g., `field:asc|desc`), filter params as specified.
 - Return `total` for precise pagination; support cursor-based pagination if needed later.
@@ -286,6 +344,15 @@
   - 1–1, 1–many, many–1, many–many matches.
   - Edge cases (zero matches, large groups).
 - Selectable via config flag (e.g., environment variable) without changing API client code.
+
+#### Mock Reconciliation Behavior
+- **Match validation**: Mock should validate that selected fills have same side, aggregated quantity, and price
+- **Success scenarios**: Return success when validation passes
+- **Failure scenarios**: Return error when:
+  - Different sides (Buy vs Sell)
+  - Different prices
+  - Aggregated quantities don't match
+- **Error messages**: Provide descriptive error messages for validation failures
 
 ---
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
   Box,
   Grid,
@@ -16,13 +16,15 @@ import {
 } from '@mui/material'
 import { FillRow } from '@/types/fills'
 import { fillsTableColumns } from './constants'
-import { useTableSelection } from '@/hooks/useTableSelection'
+
 
 interface FillsTablesProps {
   clientFills: FillRow[]
   brokerFills: FillRow[]
   loading?: boolean
   error?: Error | null
+  onRowSelection?: (row: FillRow, side: 'client' | 'broker', isUnchecking?: boolean) => void
+  isSelected?: (id: string) => boolean
 }
 
 const FillsTables: React.FC<FillsTablesProps> = ({
@@ -30,41 +32,21 @@ const FillsTables: React.FC<FillsTablesProps> = ({
   brokerFills,
   loading = false,
   error = null,
+  onRowSelection,
+  isSelected,
 }) => {
-  const [selectedClientIds, setSelectedClientIds] = useState<string[]>([])
-  const [selectedBrokerIds, setSelectedBrokerIds] = useState<string[]>([])
-
-  const handleRowSelection = (row: FillRow, side: 'client' | 'broker') => {
-    const matchedIds = row.matchedIds || []
-    const allMatchedIds = [row.id, ...matchedIds]
-    
-    // Clear previous selections and select the new group
-    setSelectedClientIds([])
-    setSelectedBrokerIds([])
-    
-    // Select all matched rows on both sides
-    allMatchedIds.forEach(id => {
-      const clientFill = clientFills.find(f => f.id === id)
-      const brokerFill = brokerFills.find(f => f.id === id)
-      
-      if (clientFill) {
-        setSelectedClientIds(prev => [...prev, id])
-      }
-      if (brokerFill) {
-        setSelectedBrokerIds(prev => [...prev, id])
-      }
-    })
+  const handleRowClick = (row: FillRow, side: 'client' | 'broker') => {
+    if (onRowSelection) {
+      onRowSelection(row, side)
+    }
   }
 
-  const handleClientSelectionChange = (ids: string[]) => {
-    setSelectedClientIds(ids)
+  const handleCheckboxChange = (row: FillRow, side: 'client' | 'broker', checked: boolean) => {
+    if (onRowSelection) {
+      // Pass the isUnchecking flag to the parent component
+      onRowSelection(row, side, !checked)
+    }
   }
-
-  const handleBrokerSelectionChange = (ids: string[]) => {
-    setSelectedBrokerIds(ids)
-  }
-
-  const isSelected = (id: string) => selectedClientIds.includes(id) || selectedBrokerIds.includes(id)
 
   if (error) {
     return (
@@ -93,19 +75,7 @@ const FillsTables: React.FC<FillsTablesProps> = ({
                 <Table stickyHeader size="small">
                   <TableHead>
                     <TableRow>
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={selectedClientIds.length === clientFills.length}
-                          indeterminate={selectedClientIds.length > 0 && selectedClientIds.length < clientFills.length}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              handleClientSelectionChange(clientFills.map(f => f.id))
-                            } else {
-                              handleClientSelectionChange([])
-                            }
-                          }}
-                        />
-                      </TableCell>
+                      <TableCell padding="checkbox"></TableCell>
                       {fillsTableColumns.map((column) => (
                         <TableCell key={String(column.id)}>
                           {column.header}
@@ -118,29 +88,21 @@ const FillsTables: React.FC<FillsTablesProps> = ({
                       <TableRow
                         key={row.id}
                         hover
-                        selected={isSelected(row.id)}
-                        onClick={() => handleRowSelection(row, 'client')}
+                        selected={isSelected ? isSelected(row.id) : false}
+                        onClick={() => handleRowClick(row, 'client')}
                         sx={{
                           cursor: 'pointer',
-                          backgroundColor: isSelected(row.id) ? 'primary.light' : 'inherit',
+                          backgroundColor: isSelected && isSelected(row.id) ? 'primary.light' : 'inherit',
                           '&:hover': {
-                            backgroundColor: isSelected(row.id) ? 'primary.light' : 'action.hover',
+                            backgroundColor: isSelected && isSelected(row.id) ? 'primary.light' : 'action.hover',
                           },
                           transition: 'background-color 0.2s ease',
                         }}
                       >
                         <TableCell padding="checkbox">
                           <Checkbox
-                            checked={isSelected(row.id)}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                handleRowSelection(row, 'client')
-                              } else {
-                                // Clear all selections when unchecking
-                                setSelectedClientIds([])
-                                setSelectedBrokerIds([])
-                              }
-                            }}
+                            checked={isSelected ? isSelected(row.id) : false}
+                            onChange={(e) => handleCheckboxChange(row, 'client', e.target.checked)}
                             onClick={(e) => e.stopPropagation()}
                           />
                         </TableCell>
@@ -176,19 +138,7 @@ const FillsTables: React.FC<FillsTablesProps> = ({
                 <Table stickyHeader size="small">
                   <TableHead>
                     <TableRow>
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={selectedBrokerIds.length === brokerFills.length}
-                          indeterminate={selectedBrokerIds.length > 0 && selectedBrokerIds.length < brokerFills.length}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              handleBrokerSelectionChange(brokerFills.map(f => f.id))
-                            } else {
-                              handleBrokerSelectionChange([])
-                            }
-                          }}
-                        />
-                      </TableCell>
+                      <TableCell padding="checkbox"></TableCell>
                       {fillsTableColumns.map((column) => (
                         <TableCell key={String(column.id)}>
                           {column.header}
@@ -201,29 +151,21 @@ const FillsTables: React.FC<FillsTablesProps> = ({
                       <TableRow
                         key={row.id}
                         hover
-                        selected={isSelected(row.id)}
-                        onClick={() => handleRowSelection(row, 'broker')}
+                        selected={isSelected ? isSelected(row.id) : false}
+                        onClick={() => handleRowClick(row, 'broker')}
                         sx={{
                           cursor: 'pointer',
-                          backgroundColor: isSelected(row.id) ? 'primary.light' : 'inherit',
+                          backgroundColor: isSelected && isSelected(row.id) ? 'primary.light' : 'inherit',
                           '&:hover': {
-                            backgroundColor: isSelected(row.id) ? 'primary.light' : 'action.hover',
+                            backgroundColor: isSelected && isSelected(row.id) ? 'primary.light' : 'action.hover',
                           },
                           transition: 'background-color 0.2s ease',
                         }}
                       >
                         <TableCell padding="checkbox">
                           <Checkbox
-                            checked={isSelected(row.id)}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                handleRowSelection(row, 'broker')
-                              } else {
-                                // Clear all selections when unchecking
-                                setSelectedClientIds([])
-                                setSelectedBrokerIds([])
-                              }
-                            }}
+                            checked={isSelected ? isSelected(row.id) : false}
+                            onChange={(e) => handleCheckboxChange(row, 'broker', e.target.checked)}
                             onClick={(e) => e.stopPropagation()}
                           />
                         </TableCell>

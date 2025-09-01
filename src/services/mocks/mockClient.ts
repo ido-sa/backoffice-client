@@ -1,7 +1,13 @@
 import { PaginatedResponse, FilterOption } from '@/types/common'
 import { FillAlert, TransactionAlert } from '@/types/alerts'
-import { FillRow, FillFilters } from '@/types/fills'
-import { ClientTransactionRow, BrokerTransactionRow, TransactionFilters } from '@/types/transactions'
+import { FillRow, FillFilters, FillMatchRequest, FillMatchResponse } from '@/types/fills'
+import { 
+  ClientTransactionRow, 
+  BrokerTransactionRow, 
+  TransactionFilters,
+  TransactionMatchRequest,
+  TransactionMatchResponse
+} from '@/types/transactions'
 import { API_ENDPOINTS } from '@/constants/api'
 
 // Mock data generators
@@ -654,6 +660,163 @@ class MockClient {
       page: params.page || 1,
       pageSize: params.pageSize || 100,
       total: items.length,
+    }
+  }
+
+  // Reconciliation methods
+  async matchFills(request: FillMatchRequest): Promise<FillMatchResponse> {
+    await this.delay()
+    
+    // Get all fills data to validate
+    const clientFills = await this.getClientFills({})
+    const brokerFills = await this.getBrokerFills({})
+    
+    const selectedClientFills = clientFills.items.filter(fill => request.clientFillIds.includes(fill.id))
+    const selectedBrokerFills = brokerFills.items.filter(fill => request.brokerFillIds.includes(fill.id))
+    
+    // Validation: Check if all selected fills are "No" status
+    const hasNonNoClientFills = selectedClientFills.some(fill => fill.reconciled !== 'No')
+    const hasNonNoBrokerFills = selectedBrokerFills.some(fill => fill.reconciled !== 'No')
+    
+    if (hasNonNoClientFills || hasNonNoBrokerFills) {
+      return {
+        success: false,
+        message: 'Cannot match fills: Only "No" status fills can be matched',
+        error: 'INVALID_STATUS'
+      }
+    }
+    
+    // Validation: Check sides
+    const clientSides = [...new Set(selectedClientFills.map(fill => fill.side))]
+    const brokerSides = [...new Set(selectedBrokerFills.map(fill => fill.side))]
+    
+    if (clientSides.length > 1 || brokerSides.length > 1 || clientSides[0] !== brokerSides[0]) {
+      return {
+        success: false,
+        message: `Cannot match fills: Different sides (Client: ${clientSides.join(', ')} vs Broker: ${brokerSides.join(', ')})`,
+        error: 'DIFFERENT_SIDES'
+      }
+    }
+    
+    // Validation: Check prices
+    const clientPrices = [...new Set(selectedClientFills.map(fill => fill.price))]
+    const brokerPrices = [...new Set(selectedBrokerFills.map(fill => fill.price))]
+    
+    if (clientPrices.length > 1 || brokerPrices.length > 1 || clientPrices[0] !== brokerPrices[0]) {
+      return {
+        success: false,
+        message: `Cannot match fills: Different prices (Client: ${clientPrices.join(', ')} vs Broker: ${brokerPrices.join(', ')})`,
+        error: 'DIFFERENT_PRICES'
+      }
+    }
+    
+    // Validation: Check aggregated quantities
+    const clientTotalLots = selectedClientFills.reduce((sum, fill) => sum + fill.lots, 0)
+    const brokerTotalLots = selectedBrokerFills.reduce((sum, fill) => sum + fill.lots, 0)
+    
+    if (clientTotalLots !== brokerTotalLots) {
+      return {
+        success: false,
+        message: `Cannot match fills: Aggregated quantities don't match (Client: ${clientTotalLots} vs Broker: ${brokerTotalLots})`,
+        error: 'QUANTITY_MISMATCH'
+      }
+    }
+    
+    // Success
+    return {
+      success: true,
+      message: `Successfully matched ${selectedClientFills.length} client fills with ${selectedBrokerFills.length} broker fills`,
+      error: null
+    }
+  }
+
+  async unmatchFills(request: FillMatchRequest): Promise<FillMatchResponse> {
+    await this.delay()
+    
+    // Get all fills data to validate
+    const clientFills = await this.getClientFills({})
+    const brokerFills = await this.getBrokerFills({})
+    
+    const selectedClientFills = clientFills.items.filter(fill => request.clientFillIds.includes(fill.id))
+    const selectedBrokerFills = brokerFills.items.filter(fill => request.brokerFillIds.includes(fill.id))
+    
+    // Validation: Check if all selected fills are matched (Auto or Manual)
+    const hasUnmatchedClientFills = selectedClientFills.some(fill => fill.reconciled === 'No')
+    const hasUnmatchedBrokerFills = selectedBrokerFills.some(fill => fill.reconciled === 'No')
+    
+    if (hasUnmatchedClientFills || hasUnmatchedBrokerFills) {
+      return {
+        success: false,
+        message: 'Cannot unmatch fills: Only matched fills (Auto/Manual) can be unmatched',
+        error: 'INVALID_STATUS'
+      }
+    }
+    
+    // Success
+    return {
+      success: true,
+      message: `Successfully unmatched ${selectedClientFills.length} client fills with ${selectedBrokerFills.length} broker fills`,
+      error: null
+    }
+  }
+
+  async matchTransactions(request: TransactionMatchRequest): Promise<TransactionMatchResponse> {
+    await this.delay()
+    
+    // Get all transactions data to validate
+    const clientTransactions = await this.getClientTransactions({})
+    const brokerTransactions = await this.getBrokerTransactions({})
+    
+    const selectedClientTransactions = clientTransactions.items.filter(tx => request.clientTransactionIds.includes(tx.id))
+    const selectedBrokerTransactions = brokerTransactions.items.filter(tx => request.brokerTransactionIds.includes(tx.id))
+    
+    // Validation: Check if all selected transactions are "No" status
+    const hasNonNoClientTransactions = selectedClientTransactions.some(tx => tx.reconciled !== 'No')
+    const hasNonNoBrokerTransactions = selectedBrokerTransactions.some(tx => tx.reconciled !== 'No')
+    
+    if (hasNonNoClientTransactions || hasNonNoBrokerTransactions) {
+      return {
+        success: false,
+        message: 'Cannot match transactions: Only "No" status transactions can be matched',
+        error: 'INVALID_STATUS'
+      }
+    }
+    
+    // Success (transactions have simpler validation for now)
+    return {
+      success: true,
+      message: `Successfully matched ${selectedClientTransactions.length} client transactions with ${selectedBrokerTransactions.length} broker transactions`,
+      error: null
+    }
+  }
+
+  async unmatchTransactions(request: TransactionMatchRequest): Promise<TransactionMatchResponse> {
+    await this.delay()
+    
+    // Get all transactions data to validate
+    const clientTransactions = await this.getClientTransactions({})
+    const brokerTransactions = await this.getBrokerTransactions({})
+    
+    const selectedClientTransactions = clientTransactions.items.filter(tx => request.clientTransactionIds.includes(tx.id))
+    const selectedBrokerTransactions = brokerTransactions.items.filter(tx => request.brokerTransactionIds.includes(tx.id))
+    
+    // Validation: Check if all selected transactions are matched (Auto or Manual)
+    const hasUnmatchedClientTransactions = selectedClientTransactions.some(tx => tx.reconciled === 'No')
+    const hasUnmatchedBrokerTransactions = selectedBrokerTransactions.some(tx => tx.reconciled === 'No')
+    
+    if (hasUnmatchedClientTransactions || hasUnmatchedBrokerTransactions) {
+      return {
+        success: false,
+        message: 'Cannot unmatch transactions: Only matched transactions (Auto/Manual) can be unmatched',
+        error: 'INVALID_STATUS'
+      }
+    }
+    
+    // Success
+    return {
+      success: true,
+      message: `Successfully unmatched ${selectedClientTransactions.length} client transactions with ${selectedBrokerTransactions.length} broker transactions`,
+      error: null
     }
   }
 }

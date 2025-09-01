@@ -54,3 +54,14 @@ export interface TransactionAlert {
   brokerId: string
   brokerName: string
 }
+
+export interface TransactionMatchRequest {
+  clientTransactionIds: string[]
+  brokerTransactionIds: string[]
+}
+
+export interface TransactionMatchResponse {
+  success: boolean
+  message: string
+  error: string | null
+}

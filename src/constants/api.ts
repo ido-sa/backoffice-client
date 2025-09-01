@@ -18,6 +18,12 @@ export const API_ENDPOINTS = {
   TRANSACTIONS_CLIENT: '/api/transactions/client',
   TRANSACTIONS_BROKER: '/api/transactions/broker',
   
+  // Reconciliation actions
+  FILLS_MATCH: '/api/fills/match',
+  FILLS_UNMATCH: '/api/fills/unmatch',
+  TRANSACTIONS_MATCH: '/api/transactions/match',
+  TRANSACTIONS_UNMATCH: '/api/transactions/unmatch',
+  
   // Optional reconciliation endpoints
   RECONCILIATION_MANUAL: '/api/reconciliation/manual',
   RECONCILIATION_GROUPS: '/api/reconciliation/groups',
