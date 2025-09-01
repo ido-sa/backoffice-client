@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
   Box,
   Grid,
@@ -22,6 +22,8 @@ interface TransactionsTablesProps {
   brokerTransactions: BrokerTransactionRow[]
   loading?: boolean
   error?: Error | null
+  onRowSelection?: (row: ClientTransactionRow | BrokerTransactionRow, side: 'client' | 'broker', isUnchecking?: boolean) => void
+  isSelected?: (id: string) => boolean
 }
 
 const TransactionsTables: React.FC<TransactionsTablesProps> = ({
@@ -29,41 +31,9 @@ const TransactionsTables: React.FC<TransactionsTablesProps> = ({
   brokerTransactions,
   loading = false,
   error = null,
+  onRowSelection,
+  isSelected,
 }) => {
-  const [selectedClientIds, setSelectedClientIds] = useState<string[]>([])
-  const [selectedBrokerIds, setSelectedBrokerIds] = useState<string[]>([])
-
-  const handleRowSelection = (row: ClientTransactionRow | BrokerTransactionRow, side: 'client' | 'broker') => {
-    const matchedIds = row.matchedIds || []
-    const allMatchedIds = [row.id, ...matchedIds]
-    
-    // Clear previous selections and select the new group
-    setSelectedClientIds([])
-    setSelectedBrokerIds([])
-    
-    // Select all matched rows on both sides
-    allMatchedIds.forEach(id => {
-      const clientTransaction = clientTransactions.find(t => t.id === id)
-      const brokerTransaction = brokerTransactions.find(t => t.id === id)
-      
-      if (clientTransaction) {
-        setSelectedClientIds(prev => [...prev, id])
-      }
-      if (brokerTransaction) {
-        setSelectedBrokerIds(prev => [...prev, id])
-      }
-    })
-  }
-
-  const handleClientSelectionChange = (ids: string[]) => {
-    setSelectedClientIds(ids)
-  }
-
-  const handleBrokerSelectionChange = (ids: string[]) => {
-    setSelectedBrokerIds(ids)
-  }
-
-  const isSelected = (id: string) => selectedClientIds.includes(id) || selectedBrokerIds.includes(id)
 
   if (error) {
     return (
@@ -93,17 +63,7 @@ const TransactionsTables: React.FC<TransactionsTablesProps> = ({
                   <TableHead>
                     <TableRow>
                       <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={selectedClientIds.length === clientTransactions.length}
-                          indeterminate={selectedClientIds.length > 0 && selectedClientIds.length < clientTransactions.length}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              handleClientSelectionChange(clientTransactions.map(t => t.id))
-                            } else {
-                              handleClientSelectionChange([])
-                            }
-                          }}
-                        />
+                        {/* Header checkbox removed - no select all functionality */}
                       </TableCell>
                       {clientTransactionColumns.map((column) => (
                         <TableCell key={String(column.id)}>
@@ -117,28 +77,22 @@ const TransactionsTables: React.FC<TransactionsTablesProps> = ({
                       <TableRow
                         key={row.id}
                         hover
-                        selected={isSelected(row.id)}
-                        onClick={() => handleRowSelection(row, 'client')}
+                        selected={isSelected?.(row.id) || false}
+                        onClick={() => onRowSelection?.(row, 'client')}
                         sx={{
                           cursor: 'pointer',
-                          backgroundColor: isSelected(row.id) ? 'primary.light' : 'inherit',
+                          backgroundColor: isSelected?.(row.id) ? 'primary.light' : 'inherit',
                           '&:hover': {
-                            backgroundColor: isSelected(row.id) ? 'primary.light' : 'action.hover',
+                            backgroundColor: isSelected?.(row.id) ? 'primary.light' : 'action.hover',
                           },
                           transition: 'background-color 0.2s ease',
                         }}
                       >
                         <TableCell padding="checkbox">
                           <Checkbox
-                            checked={isSelected(row.id)}
+                            checked={isSelected?.(row.id) || false}
                             onChange={(e) => {
-                              if (e.target.checked) {
-                                handleRowSelection(row, 'client')
-                              } else {
-                                // Clear all selections when unchecking
-                                setSelectedClientIds([])
-                                setSelectedBrokerIds([])
-                              }
+                              onRowSelection?.(row, 'client', !e.target.checked)
                             }}
                             onClick={(e) => e.stopPropagation()}
                           />
@@ -176,17 +130,7 @@ const TransactionsTables: React.FC<TransactionsTablesProps> = ({
                   <TableHead>
                     <TableRow>
                       <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={selectedBrokerIds.length === brokerTransactions.length}
-                          indeterminate={selectedBrokerIds.length > 0 && selectedBrokerIds.length < brokerTransactions.length}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              handleBrokerSelectionChange(brokerTransactions.map(t => t.id))
-                            } else {
-                              handleBrokerSelectionChange([])
-                            }
-                          }}
-                        />
+                        {/* Header checkbox removed - no select all functionality */}
                       </TableCell>
                       {brokerTransactionColumns.map((column) => (
                         <TableCell key={String(column.id)}>
@@ -200,28 +144,22 @@ const TransactionsTables: React.FC<TransactionsTablesProps> = ({
                       <TableRow
                         key={row.id}
                         hover
-                        selected={isSelected(row.id)}
-                        onClick={() => handleRowSelection(row, 'broker')}
+                        selected={isSelected?.(row.id) || false}
+                        onClick={() => onRowSelection?.(row, 'broker')}
                         sx={{
                           cursor: 'pointer',
-                          backgroundColor: isSelected(row.id) ? 'primary.light' : 'inherit',
+                          backgroundColor: isSelected?.(row.id) ? 'primary.light' : 'inherit',
                           '&:hover': {
-                            backgroundColor: isSelected(row.id) ? 'primary.light' : 'action.hover',
+                            backgroundColor: isSelected?.(row.id) ? 'primary.light' : 'action.hover',
                           },
                           transition: 'background-color 0.2s ease',
                         }}
                       >
                         <TableCell padding="checkbox">
                           <Checkbox
-                            checked={isSelected(row.id)}
+                            checked={isSelected?.(row.id) || false}
                             onChange={(e) => {
-                              if (e.target.checked) {
-                                handleRowSelection(row, 'broker')
-                              } else {
-                                // Clear all selections when unchecking
-                                setSelectedClientIds([])
-                                setSelectedBrokerIds([])
-                              }
+                              onRowSelection?.(row, 'broker', !e.target.checked)
                             }}
                             onClick={(e) => e.stopPropagation()}
                           />
