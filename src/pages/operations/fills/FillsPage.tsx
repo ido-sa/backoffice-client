@@ -11,7 +11,6 @@ import { useFillsAlerts, useFillsData } from './hooks/useFillsData'
 import { fillsAlertColumns } from './constants'
 import { useReconciliation } from '@/hooks/useReconciliation'
 import MockClient from '@/services/mocks/mockClient'
-import fillsApiClient from '@/services/api/fills'
 
 const mockClient = new MockClient()
 
@@ -59,7 +58,7 @@ const FillsPage: React.FC = () => {
 
   // Match mutation
   const matchMutation = useMutation({
-    mutationFn: (request: FillMatchRequest) => fillsApiClient.matchFills(request),
+    mutationFn: (request: FillMatchRequest) => mockClient.matchFills(request),
     onSuccess: (response) => {
       if (response.success) {
         setSuccessMessage(response.message)
@@ -77,7 +76,7 @@ const FillsPage: React.FC = () => {
 
   // Unmatch mutation
   const unmatchMutation = useMutation({
-    mutationFn: (request: FillMatchRequest) => fillsApiClient.unmatchFills(request),
+    mutationFn: (request: FillMatchRequest) => mockClient.unmatchFills(request),
     onSuccess: (response) => {
       if (response.success) {
         setSuccessMessage(response.message)
