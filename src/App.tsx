@@ -3,6 +3,7 @@ import AppLayout from '@/components/layout/AppLayout'
 import OperationsLayout from '@/components/layout/OperationsLayout'
 import FillsPage from '@/pages/operations/fills/FillsPage'
 import TransactionsPage from '@/pages/operations/transactions/TransactionsPage'
+import ProfitLossPage from '@/pages/finance/ProfitLossPage'
 import { ROUTES } from '@/constants/routes'
 
 function App() {
@@ -20,10 +21,12 @@ function App() {
           <Route path="transactions" element={<TransactionsPage />} />
         </Route>
         
+        {/* Finance routes */}
+        <Route path={ROUTES.FINANCE} element={<ProfitLossPage />} />
+        
         {/* Future routes - placeholder pages */}
         <Route path={ROUTES.DASHBOARD} element={<div>Dashboard - Coming Soon</div>} />
         <Route path={ROUTES.REPORTS} element={<div>Reports - Coming Soon</div>} />
-        <Route path={ROUTES.FINANCE} element={<div>Finance - Coming Soon</div>} />
         <Route path={ROUTES.SETTINGS} element={<div>Settings - Coming Soon</div>} />
         
         {/* Catch all */}

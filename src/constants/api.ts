@@ -27,6 +27,12 @@ export const API_ENDPOINTS = {
   // Optional reconciliation endpoints
   RECONCILIATION_MANUAL: '/api/reconciliation/manual',
   RECONCILIATION_GROUPS: '/api/reconciliation/groups',
+  
+  // Finance endpoints
+  FINANCE_FUNDS: '/api/funds',
+  FINANCE_BROKERS: '/api/brokers',
+  FINANCE_PNL_SUMMARY: '/api/finance/pnl_summary',
+  FINANCE_PNL: '/api/finance/pnl',
 } as const
 
 export const DEFAULT_PAGE_SIZE = 50

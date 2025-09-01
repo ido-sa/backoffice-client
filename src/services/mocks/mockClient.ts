@@ -8,6 +8,15 @@ import {
   TransactionMatchRequest,
   TransactionMatchResponse
 } from '@/types/transactions'
+import { 
+  FinanceSummary, 
+  FinanceBreakdown, 
+  FinanceFilters,
+  FinanceSummaryResponse,
+  FinanceBreakdownResponse,
+  FundOption,
+  BrokerOption
+} from '@/types/finance'
 import { API_ENDPOINTS } from '@/constants/api'
 
 // Mock data generators
@@ -49,6 +58,263 @@ const mockStrikes: FilterOption[] = [
   { id: 'strike9', name: '5300' },
   { id: 'strike10', name: '5400' },
 ]
+
+// Finance mock data
+const mockFinanceBrokers: BrokerOption[] = [
+  { id: 'fb1', name: 'Goldman Sachs' },
+  { id: 'fb2', name: 'Morgan Stanley' },
+  { id: 'fb3', name: 'JP Morgan' },
+  { id: 'fb4', name: 'Credit Suisse' },
+  { id: 'fb5', name: 'Deutsche Bank' },
+]
+
+const mockFinanceFunds: FundOption[] = [
+  { id: 'ff1', name: 'Alpha Fund' },
+  { id: 'ff2', name: 'Beta Fund' },
+  { id: 'ff3', name: 'Gamma Fund' },
+  { id: 'ff4', name: 'Delta Fund' },
+  { id: 'ff5', name: 'Epsilon Fund' },
+  { id: 'ff6', name: 'Zeta Fund' },
+]
+
+const mockFinanceSummary: FinanceSummary = {
+  balanceAtStart: 2500000.00,
+  balanceAtEnd: 2750000.00,
+  netReceivablesAtStart: 450000.00,
+  netReceivablesAtEnd: 520000.00,
+  withdrawals: 150000.00,
+  netProfitLoss: 350000.00,
+  financingProfitLoss: 50000.00,
+  totalProfitLoss: 400000.00,
+}
+
+const mockFinanceBreakdown: FinanceBreakdown = {
+  summary: mockFinanceSummary,
+  breakdown: [
+    {
+      broker: 'Goldman Sachs',
+      funds: [
+        {
+          fund: 'Alpha Fund',
+          types: [
+            {
+              type: 'Charge',
+              expected: {
+                usd: 15000.00,
+                currencies: {
+                  'EUR': 12750.00,
+                  'GBP': 11250.00,
+                  'JPY': 2250000.00
+                }
+              },
+              arrived: {
+                usd: 16500.00,
+                currencies: {
+                  'EUR': 14025.00,
+                  'GBP': 12375.00,
+                  'JPY': 2475000.00
+                }
+              }
+            },
+            {
+              type: 'Rebate',
+              expected: {
+                usd: 8500.00,
+                currencies: {
+                  'EUR': 7225.00,
+                  'GBP': 6375.00,
+                  'JPY': 1275000.00
+                }
+              },
+              arrived: {
+                usd: 9200.00,
+                currencies: {
+                  'EUR': 7820.00,
+                  'GBP': 6900.00,
+                  'JPY': 1380000.00
+                }
+              }
+            },
+            {
+              type: 'Tax',
+              expected: {
+                usd: 3200.00,
+                currencies: {
+                  'EUR': 2720.00,
+                  'GBP': 2400.00,
+                  'JPY': 480000.00
+                }
+              }
+            }
+          ]
+        },
+        {
+          fund: 'Beta Fund',
+          types: [
+            {
+              type: 'Interest',
+              arrived: {
+                usd: 25000.00,
+                currencies: {
+                  'EUR': 21250.00,
+                  'GBP': 18750.00,
+                  'JPY': 3750000.00
+                }
+              }
+            },
+            {
+              type: 'Gross Profit',
+              expected: {
+                usd: 125000.00,
+                currencies: {
+                  'EUR': 106250.00,
+                  'GBP': 93750.00,
+                  'JPY': 18750000.00
+                }
+              },
+              arrived: {
+                usd: 135000.00,
+                currencies: {
+                  'EUR': 114750.00,
+                  'GBP': 101250.00,
+                  'JPY': 20250000.00
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      broker: 'Morgan Stanley',
+      funds: [
+        {
+          fund: 'Gamma Fund',
+          types: [
+            {
+              type: 'Charge',
+              expected: {
+                usd: 12000.00,
+                currencies: {
+                  'EUR': 10200.00,
+                  'GBP': 9000.00,
+                  'JPY': 1800000.00
+                }
+              },
+              arrived: {
+                usd: 13000.00,
+                currencies: {
+                  'EUR': 11050.00,
+                  'GBP': 9750.00,
+                  'JPY': 1950000.00
+                }
+              }
+            },
+            {
+              type: 'USD Rate',
+              expected: {
+                usd: 8500.00,
+                currencies: {
+                  'EUR': 7225.00,
+                  'GBP': 6375.00,
+                  'JPY': 1275000.00
+                }
+              }
+            }
+          ]
+        },
+        {
+          fund: 'Delta Fund',
+          types: [
+            {
+              type: 'Net Profit',
+              expected: {
+                usd: 85000.00,
+                currencies: {
+                  'EUR': 72250.00,
+                  'GBP': 63750.00,
+                  'JPY': 12750000.00
+                }
+              },
+              arrived: {
+                usd: 92000.00,
+                currencies: {
+                  'EUR': 78200.00,
+                  'GBP': 69000.00,
+                  'JPY': 13800000.00
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      broker: 'JP Morgan',
+      funds: [
+        {
+          fund: 'Epsilon Fund',
+          types: [
+            {
+              type: 'Commission',
+              expected: {
+                usd: 5500.00,
+                currencies: {
+                  'EUR': 4675.00,
+                  'GBP': 4125.00,
+                  'JPY': 825000.00
+                }
+              },
+              arrived: {
+                usd: 6000.00,
+                currencies: {
+                  'EUR': 5100.00,
+                  'GBP': 4500.00,
+                  'JPY': 900000.00
+                }
+              }
+            },
+            {
+              type: 'Fee',
+              arrived: {
+                usd: 3500.00,
+                currencies: {
+                  'EUR': 2975.00,
+                  'GBP': 2625.00,
+                  'JPY': 525000.00
+                }
+              }
+            }
+          ]
+        },
+        {
+          fund: 'Zeta Fund',
+          types: [
+            {
+              type: 'Interest',
+              expected: {
+                usd: 18000.00,
+                currencies: {
+                  'EUR': 15300.00,
+                  'GBP': 13500.00,
+                  'JPY': 2700000.00
+                }
+              },
+              arrived: {
+                usd: 19500.00,
+                currencies: {
+                  'EUR': 16575.00,
+                  'GBP': 14625.00,
+                  'JPY': 2925000.00
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
 
 class MockClient {
   private delay(ms: number = 300) {
@@ -817,6 +1083,57 @@ class MockClient {
       success: true,
       message: `Successfully unmatched ${selectedClientTransactions.length} client transactions with ${selectedBrokerTransactions.length} broker transactions`,
       error: null
+    }
+  }
+
+  // Finance endpoints
+  async getFinanceBrokers(params: any): Promise<PaginatedResponse<BrokerOption>> {
+    await this.delay()
+    
+    const filtered = mockFinanceBrokers.filter(broker => 
+      !params.q || broker.name.toLowerCase().includes(params.q.toLowerCase())
+    )
+
+    return {
+      items: filtered,
+      page: params.page || 1,
+      pageSize: params.pageSize || 50,
+      total: filtered.length,
+    }
+  }
+
+  async getFinanceFunds(params: any): Promise<PaginatedResponse<FundOption>> {
+    await this.delay()
+    
+    const filtered = mockFinanceFunds.filter(fund => 
+      !params.q || fund.name.toLowerCase().includes(params.q.toLowerCase())
+    )
+
+    return {
+      items: filtered,
+      page: params.page || 1,
+      pageSize: params.pageSize || 50,
+      total: filtered.length,
+    }
+  }
+
+  async getFinancePnlSummary(filters: FinanceFilters): Promise<FinanceSummaryResponse> {
+    await this.delay()
+    
+    // In a real implementation, this would filter based on the provided filters
+    // For mock purposes, we return the same summary data
+    return {
+      summary: mockFinanceSummary
+    }
+  }
+
+  async getFinancePnl(filters: FinanceFilters): Promise<FinanceBreakdownResponse> {
+    await this.delay()
+    
+    // In a real implementation, this would filter based on the provided filters
+    // For mock purposes, we return the same breakdown data
+    return {
+      breakdown: mockFinanceBreakdown.breakdown
     }
   }
 }
