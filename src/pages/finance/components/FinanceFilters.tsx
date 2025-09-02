@@ -7,6 +7,7 @@ import {
   MenuItem,
   CircularProgress,
 } from '@mui/material'
+import { SelectChangeEvent } from '@mui/material/Select'
 import { DatePicker } from '@mui/x-date-pickers'
 import { FinanceFilters as FinanceFiltersType, FundOption, BrokerOption } from '@/types/finance'
 import {
@@ -51,14 +52,14 @@ const FinanceFilters: React.FC<FinanceFiltersProps> = ({
     }))
   }
 
-  const handleBrokerChange = (event: any) => {
+  const handleBrokerChange = (event: SelectChangeEvent<string>) => {
     setLocalFilters(prev => ({
       ...prev,
       brokerId: event.target.value || undefined,
     }))
   }
 
-  const handleFundChange = (event: any) => {
+  const handleFundChange = (event: SelectChangeEvent<string>) => {
     setLocalFilters(prev => ({
       ...prev,
       fundId: event.target.value || undefined,
