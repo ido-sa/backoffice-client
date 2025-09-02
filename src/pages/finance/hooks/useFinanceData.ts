@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { FinanceFilters, FinanceSummaryResponse, FinanceBreakdownResponse } from '@/types/finance'
-import { API_ENDPOINTS } from '@/constants/api'
+import { FinanceFilters } from '@/types/finance'
 import MockClient from '@/services/mocks/mockClient'
 
 const mockClient = new MockClient()
