@@ -4,7 +4,7 @@ import { PaginatedResponse } from '@/types/common'
 import { FillRow, FillFilters, FillAlert, FillMatchRequest, FillMatchResponse } from '@/types/fills'
 
 class FillsApiClient extends ApiClient {
-  async getFillAlerts(params: any): Promise<PaginatedResponse<FillAlert>> {
+  async getFillAlerts(params: { page: number; pageSize: number }): Promise<PaginatedResponse<FillAlert>> {
     return this.get<PaginatedResponse<FillAlert>>(API_ENDPOINTS.ALERTS_FILLS, params)
   }
 
