@@ -1,8 +1,5 @@
 import React from 'react'
 import {
-  Box,
-  Grid,
-  Paper,
   Typography,
   Table,
   TableBody,
@@ -13,7 +10,18 @@ import {
   Checkbox,
   CircularProgress,
   Alert,
+  Grid,
 } from '@mui/material'
+import {
+  StyledGridContainer,
+  StyledPaper,
+  StyledHeaderBox,
+  StyledContentBox,
+  StyledLoadingBox,
+  StyledTableRow,
+  StyledSelectedTableRow,
+  StyledErrorBox,
+} from './TransactionsTables.styles'
 import { ClientTransactionRow, BrokerTransactionRow } from '@/types/transactions'
 import { clientTransactionColumns, brokerTransactionColumns } from './constants'
 
@@ -37,26 +45,26 @@ const TransactionsTables: React.FC<TransactionsTablesProps> = ({
 
   if (error) {
     return (
-      <Box sx={{ p: 2 }}>
+      <StyledErrorBox>
         <Alert severity="error">{error.message}</Alert>
-      </Box>
+      </StyledErrorBox>
     )
   }
 
   return (
-    <Grid container spacing={2} sx={{ height: '100%' }}>
+    <StyledGridContainer container spacing={2}>
       {/* Client Transactions Table */}
       <Grid item xs={12} md={6}>
-        <Paper sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-          <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
+        <StyledPaper>
+          <StyledHeaderBox>
             <Typography variant="h6">Client Transactions</Typography>
-          </Box>
+          </StyledHeaderBox>
           
-          <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
+          <StyledContentBox>
             {loading ? (
-              <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+              <StyledLoadingBox>
                 <CircularProgress />
-              </Box>
+              </StyledLoadingBox>
             ) : (
               <TableContainer>
                 <Table stickyHeader size="small">
@@ -74,56 +82,72 @@ const TransactionsTables: React.FC<TransactionsTablesProps> = ({
                   </TableHead>
                   <TableBody>
                     {clientTransactions.map((row) => (
-                      <TableRow
-                        key={row.id}
-                        hover
-                        selected={isSelected?.(row.id) || false}
-                        onClick={() => onRowSelection?.(row, 'client')}
-                        sx={{
-                          cursor: 'pointer',
-                          backgroundColor: isSelected?.(row.id) ? 'primary.light' : 'inherit',
-                          '&:hover': {
-                            backgroundColor: isSelected?.(row.id) ? 'primary.light' : 'action.hover',
-                          },
-                          transition: 'background-color 0.2s ease',
-                        }}
-                      >
-                        <TableCell padding="checkbox">
-                          <Checkbox
-                            checked={isSelected?.(row.id) || false}
-                            onChange={(e) => {
-                              onRowSelection?.(row, 'client', !e.target.checked)
-                            }}
-                            onClick={(e) => e.stopPropagation()}
-                          />
-                        </TableCell>
-                        {clientTransactionColumns.map((column) => (
-                          <TableCell key={String(column.id)}>
-                            {column.render ? column.render(row[column.accessorKey], row) : String(row[column.accessorKey] || '')}
-                          </TableCell>
-                        ))}
-                      </TableRow>
+                      <React.Fragment key={row.id}>
+                        {isSelected?.(row.id) ? (
+                          <StyledSelectedTableRow
+                            hover
+                            selected={true}
+                            onClick={() => onRowSelection?.(row, 'client')}
+                          >
+                            <TableCell padding="checkbox">
+                              <Checkbox
+                                checked={isSelected?.(row.id) || false}
+                                onChange={(e) => {
+                                  onRowSelection?.(row, 'client', !e.target.checked)
+                                }}
+                                onClick={(e) => e.stopPropagation()}
+                              />
+                            </TableCell>
+                            {clientTransactionColumns.map((column) => (
+                              <TableCell key={String(column.id)}>
+                                {column.render ? column.render(row[column.accessorKey], row) : String(row[column.accessorKey] || '')}
+                              </TableCell>
+                            ))}
+                          </StyledSelectedTableRow>
+                        ) : (
+                          <StyledTableRow
+                            hover
+                            selected={false}
+                            onClick={() => onRowSelection?.(row, 'client')}
+                          >
+                            <TableCell padding="checkbox">
+                              <Checkbox
+                                checked={isSelected?.(row.id) || false}
+                                onChange={(e) => {
+                                  onRowSelection?.(row, 'client', !e.target.checked)
+                                }}
+                                onClick={(e) => e.stopPropagation()}
+                              />
+                            </TableCell>
+                            {clientTransactionColumns.map((column) => (
+                              <TableCell key={String(column.id)}>
+                                {column.render ? column.render(row[column.accessorKey], row) : String(row[column.accessorKey] || '')}
+                              </TableCell>
+                            ))}
+                          </StyledTableRow>
+                        )}
+                      </React.Fragment>
                     ))}
                   </TableBody>
                 </Table>
               </TableContainer>
             )}
-          </Box>
-        </Paper>
+          </StyledContentBox>
+        </StyledPaper>
       </Grid>
 
       {/* Broker Transactions Table */}
       <Grid item xs={12} md={6}>
-        <Paper sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-          <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
+        <StyledPaper>
+          <StyledHeaderBox>
             <Typography variant="h6">Broker Transactions</Typography>
-          </Box>
+          </StyledHeaderBox>
           
-          <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
+          <StyledContentBox>
             {loading ? (
-              <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+              <StyledLoadingBox>
                 <CircularProgress />
-              </Box>
+              </StyledLoadingBox>
             ) : (
               <TableContainer>
                 <Table stickyHeader size="small">
@@ -141,44 +165,60 @@ const TransactionsTables: React.FC<TransactionsTablesProps> = ({
                   </TableHead>
                   <TableBody>
                     {brokerTransactions.map((row) => (
-                      <TableRow
-                        key={row.id}
-                        hover
-                        selected={isSelected?.(row.id) || false}
-                        onClick={() => onRowSelection?.(row, 'broker')}
-                        sx={{
-                          cursor: 'pointer',
-                          backgroundColor: isSelected?.(row.id) ? 'primary.light' : 'inherit',
-                          '&:hover': {
-                            backgroundColor: isSelected?.(row.id) ? 'primary.light' : 'action.hover',
-                          },
-                          transition: 'background-color 0.2s ease',
-                        }}
-                      >
-                        <TableCell padding="checkbox">
-                          <Checkbox
-                            checked={isSelected?.(row.id) || false}
-                            onChange={(e) => {
-                              onRowSelection?.(row, 'broker', !e.target.checked)
-                            }}
-                            onClick={(e) => e.stopPropagation()}
-                          />
-                        </TableCell>
-                        {brokerTransactionColumns.map((column) => (
-                          <TableCell key={String(column.id)}>
-                            {column.render ? column.render(row[column.accessorKey], row) : String(row[column.accessorKey] || '')}
-                          </TableCell>
-                        ))}
-                      </TableRow>
+                      <React.Fragment key={row.id}>
+                        {isSelected?.(row.id) ? (
+                          <StyledSelectedTableRow
+                            hover
+                            selected={true}
+                            onClick={() => onRowSelection?.(row, 'broker')}
+                          >
+                            <TableCell padding="checkbox">
+                              <Checkbox
+                                checked={isSelected?.(row.id) || false}
+                                onChange={(e) => {
+                                  onRowSelection?.(row, 'broker', !e.target.checked)
+                                }}
+                                onClick={(e) => e.stopPropagation()}
+                              />
+                            </TableCell>
+                            {brokerTransactionColumns.map((column) => (
+                              <TableCell key={String(column.id)}>
+                                {column.render ? column.render(row[column.accessorKey], row) : String(row[column.accessorKey] || '')}
+                              </TableCell>
+                            ))}
+                          </StyledSelectedTableRow>
+                        ) : (
+                          <StyledTableRow
+                            hover
+                            selected={false}
+                            onClick={() => onRowSelection?.(row, 'broker')}
+                          >
+                            <TableCell padding="checkbox">
+                              <Checkbox
+                                checked={isSelected?.(row.id) || false}
+                                onChange={(e) => {
+                                  onRowSelection?.(row, 'broker', !e.target.checked)
+                                }}
+                                onClick={(e) => e.stopPropagation()}
+                              />
+                            </TableCell>
+                            {brokerTransactionColumns.map((column) => (
+                              <TableCell key={String(column.id)}>
+                                {column.render ? column.render(row[column.accessorKey], row) : String(row[column.accessorKey] || '')}
+                              </TableCell>
+                            ))}
+                          </StyledTableRow>
+                        )}
+                      </React.Fragment>
                     ))}
                   </TableBody>
                 </Table>
               </TableContainer>
             )}
-          </Box>
-        </Paper>
+          </StyledContentBox>
+        </StyledPaper>
       </Grid>
-    </Grid>
+    </StyledGridContainer>
   )
 }
 
