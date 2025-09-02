@@ -1,14 +1,24 @@
 import {
-  Box,
-  List,
-  ListItem,
   ListItemText,
-  Typography,
   CircularProgress,
   Alert,
-  Paper,
+  Typography,
 } from '@mui/material'
 import { ColumnDefinition } from '@/types/common'
+import {
+  StyledErrorPaper,
+  StyledMainPaper,
+  StyledContentBox,
+  StyledLoadingBox,
+  StyledEmptyBox,
+  StyledHeaderBox,
+  StyledHeaderContentBox,
+  StyledHeaderText,
+  StyledList,
+  StyledListItem,
+  StyledListItemContentBox,
+  StyledListItemText,
+} from './AlertsPane.styles'
 
 interface AlertsPaneProps<T> {
   columns: ColumnDefinition<T>[]
@@ -26,76 +36,68 @@ function AlertsPane<T>({
   onAlertClick,
   loading = false,
   error = null,
-  title = 'Alerts',
+
 }: AlertsPaneProps<T>) {
   if (error) {
     return (
-      <Paper sx={{ p: 2, height: '100%' }}>
+      <StyledErrorPaper>
         <Alert severity="error">
           {error.message}
         </Alert>
-      </Paper>
+      </StyledErrorPaper>
     )
   }
 
   return (
-    <Paper sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
+    <StyledMainPaper>
+      <StyledContentBox>
         {loading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+          <StyledLoadingBox>
             <CircularProgress />
-          </Box>
+          </StyledLoadingBox>
         ) : data.length === 0 ? (
-          <Box sx={{ p: 2, textAlign: 'center' }}>
+          <StyledEmptyBox>
             <Typography color="text.secondary">
               No alerts found
             </Typography>
-          </Box>
+          </StyledEmptyBox>
         ) : (
           <>
             {/* Column Headers */}
-            <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider', backgroundColor: 'grey.50' }}>
-              <Box sx={{ display: 'flex', gap: 2 }}>
+            <StyledHeaderBox>
+              <StyledHeaderContentBox>
                 {columns.map((column) => (
-                  <Typography key={String(column.id)} variant="subtitle2" sx={{ fontWeight: 'bold', flex: 1 }}>
+                  <StyledHeaderText key={String(column.id)} variant="subtitle2">
                     {column.header}
-                  </Typography>
+                  </StyledHeaderText>
                 ))}
-              </Box>
-            </Box>
+              </StyledHeaderContentBox>
+            </StyledHeaderBox>
             
-            <List sx={{ p: 0 }}>
+            <StyledList>
               {data.map((item, index) => (
-              <ListItem
+              <StyledListItem
                 key={index}
-                button
                 onClick={() => onAlertClick(item)}
-                sx={{
-                  borderBottom: 1,
-                  borderColor: 'divider',
-                  '&:hover': {
-                    backgroundColor: 'action.hover',
-                  },
-                }}
               >
                 <ListItemText
                   primary={
-                    <Box sx={{ display: 'flex', gap: 2 }}>
+                    <StyledListItemContentBox>
                       {columns.map((column) => (
-                        <Typography key={String(column.id)} variant="body2" sx={{ flex: 1 }}>
+                        <StyledListItemText key={String(column.id)} variant="body2">
                           {String(item[column.accessorKey])}
-                        </Typography>
+                        </StyledListItemText>
                       ))}
-                    </Box>
+                    </StyledListItemContentBox>
                   }
                 />
-              </ListItem>
+              </StyledListItem>
             ))}
-            </List>
+            </StyledList>
           </>
         )}
-      </Box>
-    </Paper>
+      </StyledContentBox>
+    </StyledMainPaper>
   )
 }
 

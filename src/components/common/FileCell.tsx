@@ -1,13 +1,15 @@
 import React, { useState } from 'react'
 import {
-  Box,
-  Typography,
   Menu,
   MenuItem,
-  IconButton,
   Tooltip,
 } from '@mui/material'
 import { MoreVert as MoreVertIcon } from '@mui/icons-material'
+import {
+  StyledContainer,
+  StyledFilePath,
+  StyledIconButton,
+} from './FileCell.styles'
 
 interface FileCellProps {
   filePath?: string
@@ -17,7 +19,7 @@ const FileCell: React.FC<FileCellProps> = ({ filePath }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 
   if (!filePath) {
-    return <Typography color="text.secondary">-</Typography>
+    return <StyledFilePath color="text.secondary">-</StyledFilePath>
   }
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -52,29 +54,18 @@ const FileCell: React.FC<FileCellProps> = ({ filePath }) => {
   }
 
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-      <Typography
-        variant="body2"
-        sx={{
-          fontFamily: 'monospace',
-          fontSize: '0.75rem',
-          maxWidth: 200,
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap',
-        }}
-      >
+    <StyledContainer>
+      <StyledFilePath variant="body2">
         {filePath}
-      </Typography>
+      </StyledFilePath>
       
       <Tooltip title="File actions">
-        <IconButton
+        <StyledIconButton
           size="small"
           onClick={handleMenuOpen}
-          sx={{ p: 0.5 }}
         >
           <MoreVertIcon fontSize="small" />
-        </IconButton>
+        </StyledIconButton>
       </Tooltip>
 
       <Menu
@@ -87,7 +78,7 @@ const FileCell: React.FC<FileCellProps> = ({ filePath }) => {
         <MenuItem onClick={handleReloadFile}>Reload File</MenuItem>
         <MenuItem onClick={handleCopyPath}>Copy Path</MenuItem>
       </Menu>
-    </Box>
+    </StyledContainer>
   )
 }
 

@@ -1,8 +1,15 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
-import { Box, AppBar, Toolbar, Typography, Tabs, Tab } from '@mui/material'
+import { Toolbar, Tab } from '@mui/material'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { ROUTES } from '@/constants/routes'
+import {
+  StyledContainer,
+  StyledAppBar,
+  StyledTitle,
+  StyledTabs,
+  StyledMain,
+} from './AppLayout.styles'
 
 const AppLayout: React.FC = () => {
   const navigate = useNavigate()
@@ -22,31 +29,15 @@ const AppLayout: React.FC = () => {
   }
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-      <AppBar position="static" sx={{ backgroundColor: 'primary.main' }}>
+    <StyledContainer>
+      <StyledAppBar position="static">
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 0, mr: 4, color: 'white' }}>
+          <StyledTitle variant="h6">
             Backoffice Client
-          </Typography>
-          <Tabs 
+          </StyledTitle>
+          <StyledTabs 
             value={getCurrentTab()} 
             onChange={handleTabChange}
-            sx={{ 
-              flexGrow: 1,
-              '& .MuiTab-root': {
-                color: 'rgba(255, 255, 255, 0.7)',
-                fontWeight: 'normal',
-                '&.Mui-selected': {
-                  color: 'white',
-                  fontWeight: 'bold',
-                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                },
-              },
-              '& .MuiTabs-indicator': {
-                backgroundColor: 'white',
-                height: 3,
-              },
-            }}
             textColor="inherit"
             indicatorColor="secondary"
           >
@@ -55,14 +46,14 @@ const AppLayout: React.FC = () => {
             <Tab label="Reports" value={ROUTES.REPORTS} />
             <Tab label="Finance" value={ROUTES.FINANCE} />
             <Tab label="Settings" value={ROUTES.SETTINGS} />
-          </Tabs>
+          </StyledTabs>
         </Toolbar>
-      </AppBar>
+      </StyledAppBar>
       
-      <Box component="main" sx={{ flexGrow: 1, overflow: 'hidden' }}>
+      <StyledMain component="main">
         <Outlet />
-      </Box>
-    </Box>
+      </StyledMain>
+    </StyledContainer>
   )
 }
 

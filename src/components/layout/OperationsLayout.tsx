@@ -1,7 +1,13 @@
 import React from 'react'
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
-import { Box, Tabs, Tab, Paper } from '@mui/material'
+import { Tab } from '@mui/material'
 import { ROUTES } from '@/constants/routes'
+import {
+  StyledContainer,
+  StyledHeaderPaper,
+  StyledTabs,
+  StyledMain,
+} from './OperationsLayout.styles'
 
 const OperationsLayout: React.FC = () => {
   const navigate = useNavigate()
@@ -22,22 +28,21 @@ const OperationsLayout: React.FC = () => {
   }
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <Paper sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs 
+    <StyledContainer>
+      <StyledHeaderPaper>
+        <StyledTabs 
           value={getCurrentTab()} 
           onChange={handleTabChange}
-          sx={{ px: 2 }}
         >
           <Tab label="Fills Reconciliation" value="fills" />
           <Tab label="Transactions Reconciliation" value="transactions" />
-        </Tabs>
-      </Paper>
+        </StyledTabs>
+      </StyledHeaderPaper>
       
-      <Box sx={{ flexGrow: 1, overflow: 'hidden' }}>
+      <StyledMain>
         <Outlet />
-      </Box>
-    </Box>
+      </StyledMain>
+    </StyledContainer>
   )
 }
 
