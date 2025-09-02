@@ -13,7 +13,6 @@ import {
   StyledContainer,
   StyledTitle,
   StyledTableContainer,
-  StyledTable,
   StyledBrokerColumn,
   StyledFundColumn,
   StyledTypeColumn,
@@ -278,7 +277,7 @@ const FinanceBreakdownTable: React.FC<FinanceBreakdownTableProps> = ({
                   <StyledTypeCell><Skeleton variant="text" width="80%" /></StyledTypeCell>
                   <StyledExpectedArrivedCell><Skeleton variant="text" width="80%" /></StyledExpectedArrivedCell>
                   <StyledUsdCell><Skeleton variant="text" width="80%" /></StyledUsdCell>
-                  {currencies.map((_, colIndex) => (
+                  {currencies.map((currency, colIndex) => (
                     <StyledCurrencyCell key={colIndex}>
                       <Skeleton variant="text" width="80%" />
                     </StyledCurrencyCell>
