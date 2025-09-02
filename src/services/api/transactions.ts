@@ -11,7 +11,7 @@ import {
 } from '@/types/transactions'
 
 class TransactionsApiClient extends ApiClient {
-  async getTransactionAlerts(params: any): Promise<PaginatedResponse<TransactionAlert>> {
+  async getTransactionAlerts(params: { page: number; pageSize: number }): Promise<PaginatedResponse<TransactionAlert>> {
     return this.get<PaginatedResponse<TransactionAlert>>(API_ENDPOINTS.ALERTS_TRANSACTIONS, params)
   }
 
