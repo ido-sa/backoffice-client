@@ -1,15 +1,18 @@
 import React from 'react'
 import {
-  Box,
   Grid,
-  Card,
-  CardContent,
-  Typography,
-  Skeleton,
   Alert,
 } from '@mui/material'
 import { FinanceSummary as FinanceSummaryType } from '@/types/finance'
-import { FinanceSummaryStyles } from './FinanceSummary.styles'
+import {
+  StyledContainer,
+  StyledTitle,
+  StyledCard,
+  StyledCardContent,
+  StyledLabel,
+  StyledValue,
+  StyledSkeleton,
+} from './FinanceSummary.styles'
 
 interface FinanceSummaryProps {
   summary?: FinanceSummaryType
@@ -75,53 +78,50 @@ const FinanceSummary: React.FC<FinanceSummaryProps> = ({
 
   if (error) {
     return (
-      <Box sx={FinanceSummaryStyles.container}>
+      <StyledContainer>
         <Alert severity="error">
           Failed to load summary data: {error.message}
         </Alert>
-      </Box>
+      </StyledContainer>
     )
   }
 
   return (
-    <Box sx={FinanceSummaryStyles.container}>
-      <Typography variant="h6" sx={FinanceSummaryStyles.title}>
+    <StyledContainer>
+      <StyledTitle variant="h6">
         Summary
-      </Typography>
+      </StyledTitle>
       
       <Grid container spacing={2}>
         {summaryItems.map((item) => (
           <Grid item xs={12} sm={6} md={3} key={item.key}>
-            <Card sx={FinanceSummaryStyles.card}>
-              <CardContent sx={FinanceSummaryStyles.cardContent}>
-                <Typography 
+            <StyledCard>
+              <StyledCardContent>
+                <StyledLabel 
                   variant="body2" 
-                  color="text.secondary" 
-                  sx={FinanceSummaryStyles.label}
+                  color="text.secondary"
                 >
                   {item.label}
-                </Typography>
+                </StyledLabel>
                 {loading ? (
-                  <Skeleton 
+                  <StyledSkeleton 
                     variant="text" 
                     width="60%" 
                     height={32}
-                    sx={FinanceSummaryStyles.skeleton}
                   />
                 ) : (
-                  <Typography 
-                    variant="h6" 
-                    sx={FinanceSummaryStyles.value}
+                  <StyledValue 
+                    variant="h6"
                   >
                     {item.value !== undefined ? formatCurrency(item.value) : 'N/A'}
-                  </Typography>
+                  </StyledValue>
                 )}
-              </CardContent>
-            </Card>
+              </StyledCardContent>
+            </StyledCard>
           </Grid>
         ))}
       </Grid>
-    </Box>
+    </StyledContainer>
   )
 }
 

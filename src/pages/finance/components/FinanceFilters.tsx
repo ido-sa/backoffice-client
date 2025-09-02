@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import {
-  Box,
   Grid,
-  TextField,
-  Button,
   FormControl,
   InputLabel,
   Select,
@@ -12,7 +9,10 @@ import {
 } from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers'
 import { FinanceFilters as FinanceFiltersType, FundOption, BrokerOption } from '@/types/finance'
-import { FinanceFiltersStyles } from './FinanceFilters.styles'
+import {
+  StyledContainer,
+  StyledApplyButton,
+} from './FinanceFilters.styles'
 
 interface FinanceFiltersProps {
   filters: FinanceFiltersType
@@ -70,7 +70,7 @@ const FinanceFilters: React.FC<FinanceFiltersProps> = ({
   }
 
   return (
-    <Box sx={FinanceFiltersStyles.container}>
+    <StyledContainer>
       <Grid container spacing={2} alignItems="center">
         {/* Start Date */}
         <Grid item xs={12} sm={6} md={2}>
@@ -148,22 +148,21 @@ const FinanceFilters: React.FC<FinanceFiltersProps> = ({
 
         {/* Apply Button */}
         <Grid item xs={12} sm={12} md={2}>
-          <Button
+          <StyledApplyButton
             variant="contained"
             onClick={handleApply}
             disabled={loading || !localFilters.startDate || !localFilters.endDate}
             fullWidth
-            sx={FinanceFiltersStyles.applyButton}
           >
             {loading ? (
               <CircularProgress size={20} color="inherit" />
             ) : (
               'Apply Filters'
             )}
-          </Button>
+          </StyledApplyButton>
         </Grid>
       </Grid>
-    </Box>
+    </StyledContainer>
   )
 }
 

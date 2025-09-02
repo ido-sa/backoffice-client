@@ -1,43 +1,42 @@
-import { SxProps, Theme } from '@mui/material'
+import { styled } from '@mui/material/styles'
+import { Box, Typography, Card, CardContent, Skeleton } from '@mui/material'
 
-export const FinanceSummaryStyles = {
-  container: {
-    mb: 3,
-  } as SxProps<Theme>,
+export const StyledContainer = styled(Box)(() => ({
+  marginBottom: 24,
+}))
 
-  title: {
-    mb: 2,
-    fontWeight: 600,
-    color: 'text.primary',
-  } as SxProps<Theme>,
+export const StyledTitle = styled(Typography)(() => ({
+  marginBottom: 16,
+  fontWeight: 600,
+  color: '#1976d2',
+}))
 
-  card: {
-    height: '100%',
-    transition: 'box-shadow 0.2s ease-in-out',
-    '&:hover': {
-      boxShadow: 2,
-    },
-  } as SxProps<Theme>,
+export const StyledCard = styled(Card)(() => ({
+  height: '100%',
+  transition: 'box-shadow 0.2s ease-in-out',
+  '&:hover': {
+    boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+  },
+}))
 
-  cardContent: {
-    p: 2,
-    '&:last-child': {
-      pb: 2,
-    },
-  } as SxProps<Theme>,
+export const StyledCardContent = styled(CardContent)(() => ({
+  padding: 16,
+  '&:last-child': {
+    paddingBottom: 16,
+  },
+}))
 
-  label: {
-    mb: 1,
-    fontSize: '0.875rem',
-    lineHeight: 1.2,
-  } as SxProps<Theme>,
+export const StyledLabel = styled(Typography)(() => ({
+  marginBottom: 8,
+  fontSize: '0.875rem',
+  lineHeight: 1.2,
+}))
 
-  value: {
-    fontWeight: 600,
-    color: 'primary.main',
-  } as SxProps<Theme>,
+export const StyledValue = styled(Typography)(() => ({
+  fontWeight: 600,
+  color: '#1976d2',
+}))
 
-  skeleton: {
-    mt: 1,
-  } as SxProps<Theme>,
-}
+export const StyledSkeleton = styled(Skeleton)(() => ({
+  marginTop: 8,
+}))
