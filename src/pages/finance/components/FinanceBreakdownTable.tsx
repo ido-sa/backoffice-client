@@ -1,21 +1,40 @@
 import React, { useMemo, useState } from 'react'
 import {
-  Box,
-  Typography,
-  Table,
   TableBody,
-  TableCell,
-  TableContainer,
   TableHead,
   TableRow,
   Paper,
-  IconButton,
   Skeleton,
   Alert,
 } from '@mui/material'
 import { ExpandMore, ExpandLess } from '@mui/icons-material'
 import { BrokerData, TypeData } from '@/types/finance'
-import { FinanceBreakdownTableStyles } from './FinanceBreakdownTable.styles'
+import {
+  StyledContainer,
+  StyledTitle,
+  StyledTableContainer,
+  StyledTable,
+  StyledBrokerColumn,
+  StyledFundColumn,
+  StyledTypeColumn,
+  StyledExpectedArrivedColumn,
+  StyledUsdColumn,
+  StyledCurrencyColumn,
+  StyledTableRow,
+  StyledBrokerCell,
+  StyledFundCell,
+  StyledTypeCell,
+  StyledExpectedArrivedCell,
+  StyledUsdCell,
+  StyledCurrencyCell,
+  StyledCellContent,
+  StyledExpandButton,
+  StyledBrokerText,
+  StyledFundText,
+  StyledTypeText,
+  StyledUsdText,
+  StyledCurrencyText,
+} from './FinanceBreakdownTable.styles'
 
 interface FinanceBreakdownTableProps {
   breakdown?: BrokerData[]
@@ -151,7 +170,7 @@ const FinanceBreakdownTable: React.FC<FinanceBreakdownTableProps> = ({
     return rows
   }, [breakdown, expandedRows])
 
-  const formatCurrency = (value: number, currency: string = 'USD') => {
+  const formatCurrency = (value: number, currency: string = 'USD'): string => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: currency,
@@ -159,7 +178,7 @@ const FinanceBreakdownTable: React.FC<FinanceBreakdownTableProps> = ({
     }).format(value)
   }
 
-  const getAggregatedValue = (row: TableRowData, currency: string = 'USD') => {
+  const getAggregatedValue = (row: TableRowData, currency: string = 'USD'): number => {
     if (row.level === 'expected' || row.level === 'arrived') {
       const data = row.data
       if (!data) return 0
@@ -219,33 +238,34 @@ const FinanceBreakdownTable: React.FC<FinanceBreakdownTableProps> = ({
 
   if (error) {
     return (
-      <Box sx={FinanceBreakdownTableStyles.container}>
+      <StyledContainer>
         <Alert severity="error">
           Failed to load breakdown data: {error.message}
         </Alert>
-      </Box>
+      </StyledContainer>
     )
   }
 
   return (
-    <Box sx={FinanceBreakdownTableStyles.container}>
-      <Typography variant="h6" sx={FinanceBreakdownTableStyles.title}>
+    <StyledContainer>
+      <StyledTitle variant="h6">
         Profit and Loss (Broken Down)
-      </Typography>
+      </StyledTitle>
       
-      <TableContainer component={Paper} sx={FinanceBreakdownTableStyles.tableContainer}>
-        <Table size="small" sx={{ tableLayout: 'auto' }}>
+      <StyledTableContainer>
+        <Paper>
+          <table style={{ tableLayout: 'auto' }}>
           <TableHead>
             <TableRow>
-              <TableCell sx={{ ...FinanceBreakdownTableStyles.headerCell, ...FinanceBreakdownTableStyles.brokerColumn } as any}>Broker</TableCell>
-              <TableCell sx={{ ...FinanceBreakdownTableStyles.headerCell, ...FinanceBreakdownTableStyles.fundColumn } as any}>Fund</TableCell>
-              <TableCell sx={{ ...FinanceBreakdownTableStyles.headerCell, ...FinanceBreakdownTableStyles.typeColumn } as any}>Type</TableCell>
-              <TableCell sx={{ ...FinanceBreakdownTableStyles.headerCell, ...FinanceBreakdownTableStyles.expectedArrivedColumn } as any}>E/A</TableCell>
-              <TableCell sx={{ ...FinanceBreakdownTableStyles.headerCell, ...FinanceBreakdownTableStyles.usdColumn } as any}>$</TableCell>
+              <StyledBrokerColumn>Broker</StyledBrokerColumn>
+              <StyledFundColumn>Fund</StyledFundColumn>
+              <StyledTypeColumn>Type</StyledTypeColumn>
+              <StyledExpectedArrivedColumn>E/A</StyledExpectedArrivedColumn>
+              <StyledUsdColumn>$</StyledUsdColumn>
               {currencies.map(currency => (
-                <TableCell key={currency} sx={{ ...FinanceBreakdownTableStyles.headerCell, ...FinanceBreakdownTableStyles.currencyColumn } as any}>
+                <StyledCurrencyColumn key={currency}>
                   {currency}
-                </TableCell>
+                </StyledCurrencyColumn>
               ))}
             </TableRow>
           </TableHead>
@@ -253,38 +273,35 @@ const FinanceBreakdownTable: React.FC<FinanceBreakdownTableProps> = ({
             {loading ? (
               Array.from({ length: 10 }).map((_, index) => (
                 <TableRow key={index}>
-                  <TableCell sx={FinanceBreakdownTableStyles.brokerColumn}><Skeleton variant="text" width="80%" /></TableCell>
-                  <TableCell sx={FinanceBreakdownTableStyles.fundColumn}><Skeleton variant="text" width="80%" /></TableCell>
-                  <TableCell sx={FinanceBreakdownTableStyles.typeColumn}><Skeleton variant="text" width="80%" /></TableCell>
-                  <TableCell sx={FinanceBreakdownTableStyles.expectedArrivedColumn}><Skeleton variant="text" width="80%" /></TableCell>
-                  <TableCell sx={FinanceBreakdownTableStyles.usdColumn}><Skeleton variant="text" width="80%" /></TableCell>
+                  <StyledBrokerCell><Skeleton variant="text" width="80%" /></StyledBrokerCell>
+                  <StyledFundCell><Skeleton variant="text" width="80%" /></StyledFundCell>
+                  <StyledTypeCell><Skeleton variant="text" width="80%" /></StyledTypeCell>
+                  <StyledExpectedArrivedCell><Skeleton variant="text" width="80%" /></StyledExpectedArrivedCell>
+                  <StyledUsdCell><Skeleton variant="text" width="80%" /></StyledUsdCell>
                   {currencies.map((_, colIndex) => (
-                    <TableCell key={colIndex} sx={FinanceBreakdownTableStyles.currencyColumn}>
+                    <StyledCurrencyCell key={colIndex}>
                       <Skeleton variant="text" width="80%" />
-                    </TableCell>
+                    </StyledCurrencyCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               tableData.map((row) => (
-                <TableRow key={row.id} sx={FinanceBreakdownTableStyles.tableRow}>
+                <StyledTableRow key={row.id}>
                   {/* Broker Column */}
-                  <TableCell sx={FinanceBreakdownTableStyles.brokerCell}>
-                    <Box sx={FinanceBreakdownTableStyles.cellContent}>
+                  <StyledBrokerCell>
+                    <StyledCellContent>
                       {hasChildren(row) && row.level === 'broker' && (
-                        <IconButton
+                        <StyledExpandButton
                           size="small"
                           onClick={() => toggleRowExpansion(row.id)}
-                          sx={FinanceBreakdownTableStyles.expandButton}
                         >
                           {row.isExpanded ? <ExpandLess /> : <ExpandMore />}
-                        </IconButton>
+                        </StyledExpandButton>
                       )}
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          ...FinanceBreakdownTableStyles.cellText,
-                          pl: hasChildren(row) && row.level === 'broker' ? 0 : 1.5,
+                      <StyledBrokerText
+                        style={{
+                          paddingLeft: hasChildren(row) && row.level === 'broker' ? 0 : 12,
                           fontWeight: row.level === 'broker' ? 600 : 'normal',
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
@@ -292,27 +309,24 @@ const FinanceBreakdownTable: React.FC<FinanceBreakdownTableProps> = ({
                         }}
                       >
                         {row.level === 'broker' ? row.broker : ''}
-                      </Typography>
-                    </Box>
-                  </TableCell>
+                      </StyledBrokerText>
+                    </StyledCellContent>
+                  </StyledBrokerCell>
 
                   {/* Fund Column */}
-                  <TableCell sx={FinanceBreakdownTableStyles.fundCell}>
-                    <Box sx={FinanceBreakdownTableStyles.cellContent}>
+                  <StyledFundCell>
+                    <StyledCellContent>
                       {hasChildren(row) && row.level === 'fund' && (
-                        <IconButton
+                        <StyledExpandButton
                           size="small"
                           onClick={() => toggleRowExpansion(row.id)}
-                          sx={FinanceBreakdownTableStyles.expandButton}
                         >
                           {row.isExpanded ? <ExpandLess /> : <ExpandMore />}
-                        </IconButton>
+                        </StyledExpandButton>
                       )}
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          ...FinanceBreakdownTableStyles.cellText,
-                          pl: hasChildren(row) && row.level === 'fund' ? 0 : row.depth * 1.5,
+                      <StyledFundText
+                        style={{
+                          paddingLeft: hasChildren(row) && row.level === 'fund' ? 0 : row.depth * 12,
                           fontWeight: row.level === 'fund' ? 600 : 'normal',
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
@@ -320,27 +334,24 @@ const FinanceBreakdownTable: React.FC<FinanceBreakdownTableProps> = ({
                         }}
                       >
                         {row.level === 'fund' ? row.fund : ''}
-                      </Typography>
-                    </Box>
-                  </TableCell>
+                      </StyledFundText>
+                    </StyledCellContent>
+                  </StyledFundCell>
 
                   {/* Type Column */}
-                  <TableCell sx={FinanceBreakdownTableStyles.typeCell}>
-                    <Box sx={FinanceBreakdownTableStyles.cellContent}>
+                  <StyledTypeCell>
+                    <StyledCellContent>
                       {hasChildren(row) && row.level === 'type' && (
-                        <IconButton
+                        <StyledExpandButton
                           size="small"
                           onClick={() => toggleRowExpansion(row.id)}
-                          sx={FinanceBreakdownTableStyles.expandButton}
                         >
                           {row.isExpanded ? <ExpandLess /> : <ExpandMore />}
-                        </IconButton>
+                        </StyledExpandButton>
                       )}
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          ...FinanceBreakdownTableStyles.cellText,
-                          pl: hasChildren(row) && row.level === 'type' ? 0 : row.depth * 1.5,
+                      <StyledTypeText
+                        style={{
+                          paddingLeft: hasChildren(row) && row.level === 'type' ? 0 : row.depth * 12,
                           fontWeight: row.level === 'type' ? 600 : 'normal',
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
@@ -348,33 +359,28 @@ const FinanceBreakdownTable: React.FC<FinanceBreakdownTableProps> = ({
                         }}
                       >
                         {row.level === 'type' ? row.type : ''}
-                      </Typography>
-                    </Box>
-                  </TableCell>
+                      </StyledTypeText>
+                    </StyledCellContent>
+                  </StyledTypeCell>
 
                   {/* Expected/Arrived Column */}
-                  <TableCell sx={FinanceBreakdownTableStyles.expectedArrivedCell}>
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        ...FinanceBreakdownTableStyles.cellText,
+                  <StyledExpectedArrivedCell>
+                    <StyledBrokerText
+                      style={{
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
                         whiteSpace: 'nowrap',
                       }}
                     >
                       {row.level === 'expected' || row.level === 'arrived' ? row.expectedArrived : ''}
-                    </Typography>
-                  </TableCell>
+                    </StyledBrokerText>
+                  </StyledExpectedArrivedCell>
 
                   {/* USD Column */}
-                  <TableCell sx={FinanceBreakdownTableStyles.usdCell}>
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        ...FinanceBreakdownTableStyles.cellText,
+                  <StyledUsdCell>
+                    <StyledUsdText
+                      style={{
                         fontWeight: row.isExpanded === false ? 600 : 'normal',
-                        textAlign: 'right',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
                         whiteSpace: 'nowrap',
@@ -385,17 +391,14 @@ const FinanceBreakdownTable: React.FC<FinanceBreakdownTableProps> = ({
                         const showValue = row.level === 'expected' || row.level === 'arrived' || row.isExpanded === false
                         return showValue ? formatCurrency(value, 'USD') : ''
                       })()}
-                    </Typography>
-                  </TableCell>
+                    </StyledUsdText>
+                  </StyledUsdCell>
 
                   {/* Currency Columns */}
                   {currencies.map(currency => (
-                    <TableCell key={currency} sx={FinanceBreakdownTableStyles.currencyCell}>
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          ...FinanceBreakdownTableStyles.cellText,
-                          textAlign: 'right',
+                    <StyledCurrencyCell key={currency}>
+                      <StyledCurrencyText
+                        style={{
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
                           whiteSpace: 'nowrap',
@@ -406,16 +409,17 @@ const FinanceBreakdownTable: React.FC<FinanceBreakdownTableProps> = ({
                           const showValue = row.level === 'expected' || row.level === 'arrived'
                           return showValue ? formatCurrency(value, currency) : ''
                         })()}
-                      </Typography>
-                    </TableCell>
+                      </StyledCurrencyText>
+                    </StyledCurrencyCell>
                   ))}
-                </TableRow>
+                </StyledTableRow>
               ))
             )}
           </TableBody>
-        </Table>
-      </TableContainer>
-    </Box>
+        </table>
+        </Paper>
+      </StyledTableContainer>
+    </StyledContainer>
   )
 }
 
