@@ -1,19 +1,27 @@
 import React from 'react'
 import {
-  Box,
-  Grid,
-  Paper,
   Typography,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
+  Grid,
   TableRow,
   Checkbox,
   CircularProgress,
   Alert,
 } from '@mui/material'
+import {
+  StyledGridContainer,
+  StyledPaper,
+  StyledHeaderBox,
+  StyledContentBox,
+  StyledLoadingBox,
+  StyledTableRow,
+  StyledSelectedTableRow,
+  StyledErrorBox,
+} from './FillsTables.styles'
 import { FillRow } from '@/types/fills'
 import { fillsTableColumns } from './constants'
 
@@ -50,26 +58,26 @@ const FillsTables: React.FC<FillsTablesProps> = ({
 
   if (error) {
     return (
-      <Box sx={{ p: 2 }}>
+      <StyledErrorBox>
         <Alert severity="error">{error.message}</Alert>
-      </Box>
+      </StyledErrorBox>
     )
   }
 
   return (
-    <Grid container spacing={2} sx={{ height: '100%' }}>
+    <StyledGridContainer container spacing={2}>
       {/* Client Fills Table */}
       <Grid item xs={12} md={6}>
-        <Paper sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-          <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
+        <StyledPaper>
+          <StyledHeaderBox>
             <Typography variant="h6">Client Fills</Typography>
-          </Box>
+          </StyledHeaderBox>
           
-          <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
+          <StyledContentBox>
             {loading ? (
-              <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+              <StyledLoadingBox>
                 <CircularProgress />
-              </Box>
+              </StyledLoadingBox>
             ) : (
               <TableContainer>
                 <Table stickyHeader size="small">
@@ -85,54 +93,68 @@ const FillsTables: React.FC<FillsTablesProps> = ({
                   </TableHead>
                   <TableBody>
                     {clientFills.map((row) => (
-                      <TableRow
-                        key={row.id}
-                        hover
-                        selected={isSelected ? isSelected(row.id) : false}
-                        onClick={() => handleRowClick(row, 'client')}
-                        sx={{
-                          cursor: 'pointer',
-                          backgroundColor: isSelected && isSelected(row.id) ? 'primary.light' : 'inherit',
-                          '&:hover': {
-                            backgroundColor: isSelected && isSelected(row.id) ? 'primary.light' : 'action.hover',
-                          },
-                          transition: 'background-color 0.2s ease',
-                        }}
-                      >
-                        <TableCell padding="checkbox">
-                          <Checkbox
-                            checked={isSelected ? isSelected(row.id) : false}
-                            onChange={(e) => handleCheckboxChange(row, 'client', e.target.checked)}
-                            onClick={(e) => e.stopPropagation()}
-                          />
-                        </TableCell>
-                        {fillsTableColumns.map((column) => (
-                          <TableCell key={String(column.id)}>
-                            {column.render ? column.render(row[column.accessorKey], row) : String(row[column.accessorKey] || '')}
-                          </TableCell>
-                        ))}
-                      </TableRow>
+                      <React.Fragment key={row.id}>
+                        {isSelected && isSelected(row.id) ? (
+                          <StyledSelectedTableRow
+                            hover
+                            selected={true}
+                            onClick={() => handleRowClick(row, 'client')}
+                          >
+                            <TableCell padding="checkbox">
+                              <Checkbox
+                                checked={isSelected ? isSelected(row.id) : false}
+                                onChange={(e) => handleCheckboxChange(row, 'client', e.target.checked)}
+                                onClick={(e) => e.stopPropagation()}
+                              />
+                            </TableCell>
+                            {fillsTableColumns.map((column) => (
+                              <TableCell key={String(column.id)}>
+                                {column.render ? column.render(row[column.accessorKey], row) : String(row[column.accessorKey] || '')}
+                              </TableCell>
+                            ))}
+                          </StyledSelectedTableRow>
+                        ) : (
+                          <StyledTableRow
+                            hover
+                            selected={false}
+                            onClick={() => handleRowClick(row, 'client')}
+                          >
+                            <TableCell padding="checkbox">
+                              <Checkbox
+                                checked={isSelected ? isSelected(row.id) : false}
+                                onChange={(e) => handleCheckboxChange(row, 'client', e.target.checked)}
+                                onClick={(e) => e.stopPropagation()}
+                              />
+                            </TableCell>
+                            {fillsTableColumns.map((column) => (
+                              <TableCell key={String(column.id)}>
+                                {column.render ? column.render(row[column.accessorKey], row) : String(row[column.accessorKey] || '')}
+                              </TableCell>
+                            ))}
+                          </StyledTableRow>
+                        )}
+                      </React.Fragment>
                     ))}
                   </TableBody>
                 </Table>
               </TableContainer>
             )}
-          </Box>
-        </Paper>
+          </StyledContentBox>
+        </StyledPaper>
       </Grid>
 
       {/* Broker Fills Table */}
       <Grid item xs={12} md={6}>
-        <Paper sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-          <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
+        <StyledPaper>
+          <StyledHeaderBox>
             <Typography variant="h6">Broker Fills</Typography>
-          </Box>
+          </StyledHeaderBox>
           
-          <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
+          <StyledContentBox>
             {loading ? (
-              <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+              <StyledLoadingBox>
                 <CircularProgress />
-              </Box>
+              </StyledLoadingBox>
             ) : (
               <TableContainer>
                 <Table stickyHeader size="small">
@@ -148,42 +170,56 @@ const FillsTables: React.FC<FillsTablesProps> = ({
                   </TableHead>
                   <TableBody>
                     {brokerFills.map((row) => (
-                      <TableRow
-                        key={row.id}
-                        hover
-                        selected={isSelected ? isSelected(row.id) : false}
-                        onClick={() => handleRowClick(row, 'broker')}
-                        sx={{
-                          cursor: 'pointer',
-                          backgroundColor: isSelected && isSelected(row.id) ? 'primary.light' : 'inherit',
-                          '&:hover': {
-                            backgroundColor: isSelected && isSelected(row.id) ? 'primary.light' : 'action.hover',
-                          },
-                          transition: 'background-color 0.2s ease',
-                        }}
-                      >
-                        <TableCell padding="checkbox">
-                          <Checkbox
-                            checked={isSelected ? isSelected(row.id) : false}
-                            onChange={(e) => handleCheckboxChange(row, 'broker', e.target.checked)}
-                            onClick={(e) => e.stopPropagation()}
-                          />
-                        </TableCell>
-                        {fillsTableColumns.map((column) => (
-                          <TableCell key={String(column.id)}>
-                            {column.render ? column.render(row[column.accessorKey], row) : String(row[column.accessorKey] || '')}
-                          </TableCell>
-                        ))}
-                      </TableRow>
+                      <React.Fragment key={row.id}>
+                        {isSelected && isSelected(row.id) ? (
+                          <StyledSelectedTableRow
+                            hover
+                            selected={true}
+                            onClick={() => handleRowClick(row, 'broker')}
+                          >
+                            <TableCell padding="checkbox">
+                              <Checkbox
+                                checked={isSelected ? isSelected(row.id) : false}
+                                onChange={(e) => handleCheckboxChange(row, 'broker', e.target.checked)}
+                                onClick={(e) => e.stopPropagation()}
+                              />
+                            </TableCell>
+                            {fillsTableColumns.map((column) => (
+                              <TableCell key={String(column.id)}>
+                                {column.render ? column.render(row[column.accessorKey], row) : String(row[column.accessorKey] || '')}
+                              </TableCell>
+                            ))}
+                          </StyledSelectedTableRow>
+                        ) : (
+                          <StyledTableRow
+                            hover
+                            selected={false}
+                            onClick={() => handleRowClick(row, 'broker')}
+                          >
+                            <TableCell padding="checkbox">
+                              <Checkbox
+                                checked={isSelected ? isSelected(row.id) : false}
+                                onChange={(e) => handleCheckboxChange(row, 'broker', e.target.checked)}
+                                onClick={(e) => e.stopPropagation()}
+                              />
+                            </TableCell>
+                            {fillsTableColumns.map((column) => (
+                              <TableCell key={String(column.id)}>
+                                {column.render ? column.render(row[column.accessorKey], row) : String(row[column.accessorKey] || '')}
+                              </TableCell>
+                            ))}
+                          </StyledTableRow>
+                        )}
+                      </React.Fragment>
                     ))}
                   </TableBody>
                 </Table>
               </TableContainer>
             )}
-          </Box>
-        </Paper>
+          </StyledContentBox>
+        </StyledPaper>
       </Grid>
-    </Grid>
+    </StyledGridContainer>
   )
 }
 
