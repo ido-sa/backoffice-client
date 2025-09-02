@@ -1,14 +1,13 @@
 import React from 'react'
 import {
-  Box,
   Grid,
-  Button,
   FormControl,
   InputLabel,
   Select,
   MenuItem,
   CircularProgress,
 } from '@mui/material'
+import { StyledFiltersContainer, StyledApplyButton } from './TransactionsFilters.styles'
 import { DatePicker } from '@mui/x-date-pickers'
 import { useQuery } from '@tanstack/react-query'
 import { TransactionFilters } from '@/types/transactions'
@@ -38,7 +37,7 @@ const TransactionsFilters: React.FC<TransactionsFiltersProps> = ({
   }
 
   return (
-    <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
+    <StyledFiltersContainer>
       <Grid container spacing={2} alignItems="center">
         <Grid item xs={12} sm={6} md={3}>
           <DatePicker
@@ -106,18 +105,17 @@ const TransactionsFilters: React.FC<TransactionsFiltersProps> = ({
         </Grid>
 
         <Grid item xs={12} sm={6} md={3}>
-          <Button
+          <StyledApplyButton
             variant="contained"
             onClick={handleApply}
             disabled={loading}
             fullWidth
-            sx={{ height: 40 }}
           >
             {loading ? <CircularProgress size={20} /> : 'Apply Filters'}
-          </Button>
+          </StyledApplyButton>
         </Grid>
       </Grid>
-    </Box>
+    </StyledFiltersContainer>
   )
 }
 
