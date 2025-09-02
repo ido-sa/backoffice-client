@@ -6,6 +6,6 @@ export const StyledFiltersContainer = styled(Box)(({ theme }) => ({
   borderBottom: `1px solid ${theme.palette.divider}`,
 }))
 
-export const StyledApplyButton = styled(Button)(({ theme }) => ({
+export const StyledApplyButton = styled(Button)(() => ({
   height: 40,
 }))
