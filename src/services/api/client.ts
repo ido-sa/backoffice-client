@@ -4,7 +4,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || ''
 
 interface RequestOptions {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE'
-  body?: any
+  body?: unknown
   headers?: Record<string, string>
 }
 
@@ -46,16 +46,16 @@ class ApiClient {
     }
   }
 
-  protected get<T>(endpoint: string, params?: Record<string, any>): Promise<T> {
+  protected get<T>(endpoint: string, params?: Record<string, string | number | boolean>): Promise<T> {
     const url = params ? this.buildUrl(endpoint, params) : endpoint
     return this.request<T>(url)
   }
 
-  protected post<T>(endpoint: string, data?: any): Promise<T> {
+  protected post<T>(endpoint: string, data?: unknown): Promise<T> {
     return this.request<T>(endpoint, { method: 'POST', body: data })
   }
 
-  private buildUrl(endpoint: string, params: Record<string, any>): string {
+  private buildUrl(endpoint: string, params: Record<string, string | number | boolean>): string {
     const url = new URL(endpoint, window.location.origin)
     
     Object.entries(params).forEach(([key, value]) => {
