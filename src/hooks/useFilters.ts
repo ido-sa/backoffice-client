@@ -2,19 +2,21 @@ import { useState, useEffect, useCallback } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { FilterDefinition } from '@/types/common'
 
+type FilterValue = string | number | boolean | undefined
+
 interface UseFiltersProps {
   filters: FilterDefinition[]
-  onApply: (values: Record<string, any>) => void
+  onApply: (values: Record<string, FilterValue>) => void
 }
 
 export function useFilters({ filters, onApply }: UseFiltersProps) {
   const [searchParams, setSearchParams] = useSearchParams()
-  const [values, setValues] = useState<Record<string, any>>({})
+  const [values, setValues] = useState<Record<string, FilterValue>>({})
   const [loading, setLoading] = useState(false)
 
   // Initialize values from URL params
   useEffect(() => {
-    const initialValues: Record<string, any> = {}
+    const initialValues: Record<string, FilterValue> = {}
     filters.forEach(filter => {
       const paramValue = searchParams.get(filter.name)
       if (paramValue !== null) {
@@ -24,7 +26,7 @@ export function useFilters({ filters, onApply }: UseFiltersProps) {
     setValues(initialValues)
   }, [filters, searchParams])
 
-  const handleChange = useCallback((name: string, value: any) => {
+  const handleChange = useCallback((name: string, value: FilterValue) => {
     setValues(prev => {
       const newValues = { ...prev, [name]: value }
       
