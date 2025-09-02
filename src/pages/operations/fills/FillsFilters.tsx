@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import {
-  Box,
   Grid,
-  TextField,
-  Button,
   FormControl,
   InputLabel,
   Select,
   MenuItem,
   CircularProgress,
 } from '@mui/material'
+import {
+  StyledFiltersContainer,
+  StyledApplyButton,
+} from './FillsFilters.styles'
 import { DatePicker } from '@mui/x-date-pickers'
 import { useQuery } from '@tanstack/react-query'
 import { FillFilters } from '@/types/fills'
@@ -64,7 +65,7 @@ const FillsFilters: React.FC<FillsFiltersProps> = ({
   }
 
   return (
-    <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
+    <StyledFiltersContainer>
       <Grid container spacing={2} alignItems="center">
         <Grid item xs={12} sm={6} md={2}>
           <DatePicker
@@ -75,7 +76,7 @@ const FillsFilters: React.FC<FillsFiltersProps> = ({
               if (date) {
                 newFilters.date = date.toISOString().split('T')[0]
               } else {
-                delete newFilters.date
+                newFilters.date = new Date().toISOString().split('T')[0]
               }
               setLocalFilters(newFilters)
             }}
@@ -184,18 +185,17 @@ const FillsFilters: React.FC<FillsFiltersProps> = ({
         </Grid>
 
         <Grid item xs={12} sm={6} md={2}>
-          <Button
+          <StyledApplyButton
             variant="contained"
             onClick={handleApply}
             disabled={loading}
             fullWidth
-            sx={{ height: 40 }}
           >
             {loading ? <CircularProgress size={20} /> : 'Apply Filters'}
-          </Button>
+          </StyledApplyButton>
         </Grid>
       </Grid>
-    </Box>
+    </StyledFiltersContainer>
   )
 }
 
