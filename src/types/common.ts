@@ -1,3 +1,5 @@
+import React from 'react'
+
 export interface PaginatedResponse<T> {
   items: T[]
   page: number
@@ -23,7 +25,7 @@ export interface ColumnDefinition<T> {
   sortable?: boolean
   filterable?: boolean
   width?: number
-  render?: (value: any, row: T) => React.ReactNode
+  render?: (value: unknown, row: T) => React.ReactNode
 }
 
 export interface FilterDefinition {
