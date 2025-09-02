@@ -222,12 +222,12 @@ const FinanceBreakdownTable: React.FC<FinanceBreakdownTableProps> = ({
     }
     
     if (row.level === 'fund') {
-      const [_, brokerIndex, fundIndex] = row.id.split('-').map(Number)
+      const [, brokerIndex, fundIndex] = row.id.split('-').map(Number)
       return breakdown[brokerIndex]?.funds[fundIndex]?.types?.length > 0
     }
     
     if (row.level === 'type') {
-      const [_, brokerIndex, fundIndex, typeIndex] = row.id.split('-').map(Number)
+      const [, brokerIndex, fundIndex, typeIndex] = row.id.split('-').map(Number)
       const type = breakdown[brokerIndex]?.funds[fundIndex]?.types[typeIndex]
       return !!(type?.expected || type?.arrived)
     }
