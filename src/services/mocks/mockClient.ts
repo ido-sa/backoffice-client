@@ -1,10 +1,9 @@
 import { PaginatedResponse, FilterOption } from '@/types/common'
 import { FillAlert, TransactionAlert } from '@/types/alerts'
-import { FillRow, FillFilters, FillMatchRequest, FillMatchResponse } from '@/types/fills'
+import { FillRow, FillMatchRequest, FillMatchResponse } from '@/types/fills'
 import { 
   ClientTransactionRow, 
-  BrokerTransactionRow, 
-  TransactionFilters,
+  BrokerTransactionRow,
   TransactionMatchRequest,
   TransactionMatchResponse
 } from '@/types/transactions'
@@ -12,12 +11,9 @@ import {
   FinanceSummary, 
   FinanceBreakdown, 
   FinanceFilters,
-  FinanceSummaryResponse,
-  FinanceBreakdownResponse,
   FundOption,
   BrokerOption
 } from '@/types/finance'
-import { API_ENDPOINTS } from '@/constants/api'
 
 // Mock data generators
 const generateMockId = (prefix: string) => `${prefix}_${Math.random().toString(36).substr(2, 9)}`
@@ -1117,7 +1113,8 @@ class MockClient {
     }
   }
 
-  async getFinancePnlSummary(filters: FinanceFilters): Promise<FinanceSummaryResponse> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async getFinancePnlSummary(filters: FinanceFilters): Promise<{ summary: FinanceSummary }> {
     await this.delay()
     
     // In a real implementation, this would filter based on the provided filters
@@ -1127,7 +1124,8 @@ class MockClient {
     }
   }
 
-  async getFinancePnl(filters: FinanceFilters): Promise<FinanceBreakdownResponse> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async getFinancePnl(filters: FinanceFilters): Promise<{ breakdown: FinanceBreakdown['breakdown'] }> {
     await this.delay()
     
     // In a real implementation, this would filter based on the provided filters
