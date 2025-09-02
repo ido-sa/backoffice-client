@@ -1,5 +1,14 @@
 import React, { useState } from 'react'
-import { Box, Grid, Snackbar, Alert } from '@mui/material'
+import { Snackbar } from '@mui/material'
+import { 
+  StyledPageContainer, 
+  StyledGridContainer, 
+  StyledAlertsPaneGrid, 
+  StyledMainContentGrid, 
+  StyledTablesContainer,
+  StyledErrorAlert,
+  StyledSuccessAlert
+} from './TransactionsPage.styles'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import AlertsPane from '@/components/common/AlertsPane'
 import TransactionsFilters from './TransactionsFilters'
@@ -102,10 +111,10 @@ const TransactionsPage: React.FC = () => {
   }
 
   return (
-    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <Grid container sx={{ height: '100%' }}>
+    <StyledPageContainer>
+      <StyledGridContainer container>
         {/* Alerts Pane - 15% width */}
-        <Grid item xs={12} md={2} sx={{ height: '100%', p: 1 }}>
+        <StyledAlertsPaneGrid item xs={12} md={2}>
           <AlertsPane
             columns={transactionsAlertColumns}
             data={alertsQuery.data?.items || []}
@@ -114,10 +123,10 @@ const TransactionsPage: React.FC = () => {
             error={alertsQuery.error}
             title="Transaction Alerts"
           />
-        </Grid>
+        </StyledAlertsPaneGrid>
 
         {/* Main Content - 85% width */}
-        <Grid item xs={12} md={10} sx={{ height: '100%', display: 'flex', flexDirection: 'column', p: 1 }}>
+        <StyledMainContentGrid item xs={12} md={10}>
           <TransactionsFilters
             filters={filters}
             onApply={handleFiltersApply}
@@ -133,7 +142,7 @@ const TransactionsPage: React.FC = () => {
             loading={matchMutation.isPending || unmatchMutation.isPending}
           />
           
-          <Box sx={{ flexGrow: 1, mt: 1 }}>
+          <StyledTablesContainer>
             <TransactionsTables
               clientTransactions={transactionsQuery.data?.clientTransactions || []}
               brokerTransactions={transactionsQuery.data?.brokerTransactions || []}
@@ -142,9 +151,9 @@ const TransactionsPage: React.FC = () => {
               onRowSelection={(row, side, isUnchecking) => reconciliation.handleRowSelection(row, side, isUnchecking)}
               isSelected={reconciliation.isSelected}
             />
-          </Box>
-        </Grid>
-      </Grid>
+          </StyledTablesContainer>
+        </StyledMainContentGrid>
+      </StyledGridContainer>
 
       {/* Error and Success Messages */}
       <Snackbar
@@ -153,9 +162,9 @@ const TransactionsPage: React.FC = () => {
         onClose={() => setErrorMessage(null)}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >
-        <Alert onClose={() => setErrorMessage(null)} severity="error" sx={{ width: '100%' }}>
+        <StyledErrorAlert onClose={() => setErrorMessage(null)} severity="error">
           {errorMessage}
-        </Alert>
+        </StyledErrorAlert>
       </Snackbar>
 
       <Snackbar
@@ -164,11 +173,11 @@ const TransactionsPage: React.FC = () => {
         onClose={() => setSuccessMessage(null)}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >
-        <Alert onClose={() => setSuccessMessage(null)} severity="success" sx={{ width: '100%' }}>
+        <StyledSuccessAlert onClose={() => setSuccessMessage(null)} severity="success">
           {successMessage}
-        </Alert>
+        </StyledSuccessAlert>
       </Snackbar>
-    </Box>
+    </StyledPageContainer>
   )
 }
 
