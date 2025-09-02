@@ -140,7 +140,9 @@ const FillsFilters: React.FC<FillsFiltersProps> = ({
           <FormControl fullWidth size="small">
             <InputLabel>Expiration</InputLabel>
             <Select
-              value={localFilters.expiration || ''}
+              value={localFilters.expiration && expirationsQuery.data?.items?.some(exp => exp.id === localFilters.expiration) 
+                ? localFilters.expiration 
+                : ''}
               onChange={(e) => {
                 const newFilters = { 
                   ...localFilters, 
@@ -153,7 +155,7 @@ const FillsFilters: React.FC<FillsFiltersProps> = ({
               disabled={!localFilters.instrument}
             >
               <MenuItem value="">All</MenuItem>
-              {expirationsQuery.data?.items.map((expiration) => (
+              {expirationsQuery.data?.items?.map((expiration) => (
                 <MenuItem key={expiration.id} value={expiration.id}>
                   {expiration.name}
                 </MenuItem>
@@ -166,7 +168,9 @@ const FillsFilters: React.FC<FillsFiltersProps> = ({
           <FormControl fullWidth size="small">
             <InputLabel>Strike</InputLabel>
             <Select
-              value={localFilters.strike || ''}
+              value={localFilters.strike && strikesQuery.data?.items?.some(str => str.id === localFilters.strike) 
+                ? localFilters.strike 
+                : ''}
               onChange={(e) => {
                 const newFilters = { ...localFilters, strike: e.target.value || undefined }
                 setLocalFilters(newFilters)
@@ -175,7 +179,7 @@ const FillsFilters: React.FC<FillsFiltersProps> = ({
               disabled={!localFilters.instrument || !localFilters.expiration}
             >
               <MenuItem value="">All</MenuItem>
-              {strikesQuery.data?.items.map((strike) => (
+              {strikesQuery.data?.items?.map((strike) => (
                 <MenuItem key={strike.id} value={strike.id}>
                   {strike.name}
                 </MenuItem>

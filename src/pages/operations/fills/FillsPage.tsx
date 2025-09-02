@@ -118,6 +118,12 @@ const FillsPage: React.FC = () => {
   }
 
   const handleAlertClick = (alert: FillAlert) => {
+    // Only proceed if all required queries have loaded
+    if (!instrumentsQuery.data?.items || !expirationsQuery.data?.items || !strikesQuery.data?.items) {
+      console.log('Query data not yet loaded, skipping filter update')
+      return
+    }
+
     // Parse contract name to extract instrument, expiration, strike
     // Contract name format: "ES JUN25 4500"
     const contractParts = alert.contractName.split(' ')
@@ -125,12 +131,12 @@ const FillsPage: React.FC = () => {
     console.log('Contract parts:', contractParts)
     
     // Map contract parts to filter option IDs
-    const instrument = instrumentsQuery.data?.items.find(inst => inst.name === contractParts[0])?.id
-    const expiration = expirationsQuery.data?.items.find(exp => exp.name === contractParts[1])?.id
-    const strike = strikesQuery.data?.items.find(str => str.name === contractParts[2])?.id
+    const instrument = instrumentsQuery.data.items.find(inst => inst.name === contractParts[0])?.id
+    const expiration = expirationsQuery.data.items.find(exp => exp.name === contractParts[1])?.id
+    const strike = strikesQuery.data.items.find(str => str.name === contractParts[2])?.id
     
     console.log('Mapped values:', { instrument, expiration, strike })
-    console.log('Available strikes:', strikesQuery.data?.items.map(s => s.name))
+    console.log('Available strikes:', strikesQuery.data.items.map(s => s.name))
     
     const newFilters: FillFilters = {
       date: alert.date,
