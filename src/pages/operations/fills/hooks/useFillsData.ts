@@ -1,8 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
-import { FillAlert } from '@/types/alerts'
-import { FillRow, FillFilters } from '@/types/fills'
-import { PaginatedResponse } from '@/types/common'
-import { API_ENDPOINTS, DEFAULT_PAGE_SIZE, DEFAULT_TABLE_PAGE_SIZE } from '@/constants/api'
+import { FillFilters } from '@/types/fills'
+import { DEFAULT_PAGE_SIZE, DEFAULT_TABLE_PAGE_SIZE } from '@/constants/api'
 import MockClient from '@/services/mocks/mockClient'
 
 const mockClient = new MockClient()
