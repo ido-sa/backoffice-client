@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { Box, Grid, Alert, Snackbar } from '@mui/material'
+import { Alert, Snackbar } from '@mui/material'
+import { StyledPageContainer } from './ProfitLossPage.styles'
 import { useQuery } from '@tanstack/react-query'
 import { FinanceFilters, FinanceSummary, FinanceBreakdownTable } from './components'
 import { FinanceFilters as FinanceFiltersType } from '@/types/finance'
@@ -43,7 +44,7 @@ const ProfitLossPage: React.FC = () => {
   }
 
   return (
-    <Box sx={{ p: 3 }}>
+    <StyledPageContainer>
       {/* Error and Success Messages */}
       <Snackbar
         open={!!errorMessage}
@@ -89,7 +90,7 @@ const ProfitLossPage: React.FC = () => {
         loading={breakdownQuery.isLoading}
         error={breakdownQuery.error}
       />
-    </Box>
+    </StyledPageContainer>
   )
 }
 
