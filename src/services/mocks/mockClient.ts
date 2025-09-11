@@ -84,6 +84,283 @@ const mockFinanceSummary: FinanceSummary = {
   totalProfitLoss: 400000.00,
 }
 
+// Cash Flow mock data
+const mockCashFlowSummary: FinanceSummary = {
+  balanceAtStart: 1800000.00,
+  balanceAtEnd: 1950000.00,
+  netReceivablesAtStart: 320000.00,
+  netReceivablesAtEnd: 380000.00,
+  withdrawals: 200000.00,
+  netProfitLoss: 150000.00,
+  financingProfitLoss: 25000.00,
+  totalProfitLoss: 175000.00,
+}
+
+const mockCashFlowBreakdown: FinanceBreakdown = {
+  summary: mockCashFlowSummary,
+  breakdown: [
+    {
+      broker: 'Morgan Stanley',
+      funds: [
+        {
+          fund: 'Beta Fund',
+          types: [
+            {
+              type: 'Cash Inflow',
+              expected: {
+                usd: 12000.00,
+                currencies: {
+                  'EUR': 10200.00,
+                  'GBP': 9000.00,
+                  'JPY': 1800000.00,
+                  'CAD': 16200.00,
+                  'AUD': 18000.00,
+                  'CHF': 10800.00,
+                  'CNY': 84000.00,
+                  'INR': 996000.00,
+                  'BRL': 60000.00,
+                  'MXN': 216000.00,
+                  'KRW': 16200000.00,
+                  'SGD': 16200.00,
+                  'HKD': 93600.00
+                }
+              },
+              arrived: {
+                usd: 13200.00,
+                currencies: {
+                  'EUR': 11220.00,
+                  'GBP': 9900.00,
+                  'JPY': 1980000.00,
+                  'CAD': 17820.00,
+                  'AUD': 19800.00,
+                  'CHF': 11880.00,
+                  'CNY': 92400.00,
+                  'INR': 1095600.00,
+                  'BRL': 66000.00,
+                  'MXN': 237600.00,
+                  'KRW': 17820000.00,
+                  'SGD': 17820.00,
+                  'HKD': 102960.00
+                }
+              }
+            },
+            {
+              type: 'Cash Outflow',
+              expected: {
+                usd: 8000.00,
+                currencies: {
+                  'EUR': 6800.00,
+                  'GBP': 6000.00,
+                  'JPY': 1200000.00,
+                  'CAD': 10800.00,
+                  'AUD': 12000.00,
+                  'CHF': 7200.00,
+                  'CNY': 56000.00,
+                  'INR': 664000.00,
+                  'BRL': 40000.00,
+                  'MXN': 144000.00,
+                  'KRW': 10800000.00,
+                  'SGD': 10800.00,
+                  'HKD': 62400.00
+                }
+              },
+              arrived: {
+                usd: 8800.00,
+                currencies: {
+                  'EUR': 7480.00,
+                  'GBP': 6600.00,
+                  'JPY': 1320000.00,
+                  'CAD': 11880.00,
+                  'AUD': 13200.00,
+                  'CHF': 7920.00,
+                  'CNY': 61600.00,
+                  'INR': 730400.00,
+                  'BRL': 44000.00,
+                  'MXN': 158400.00,
+                  'KRW': 11880000.00,
+                  'SGD': 11880.00,
+                  'HKD': 68640.00
+                }
+              }
+            }
+          ]
+        },
+        {
+          fund: 'Gamma Fund',
+          types: [
+            {
+              type: 'Cash Inflow',
+              expected: {
+                usd: 9500.00,
+                currencies: {
+                  'EUR': 8075.00,
+                  'GBP': 7125.00,
+                  'JPY': 1425000.00,
+                  'CAD': 12825.00,
+                  'AUD': 14250.00,
+                  'CHF': 8550.00,
+                  'CNY': 66500.00,
+                  'INR': 788250.00,
+                  'BRL': 47500.00,
+                  'MXN': 171000.00,
+                  'KRW': 12825000.00,
+                  'SGD': 12825.00,
+                  'HKD': 74100.00
+                }
+              },
+              arrived: {
+                usd: 10450.00,
+                currencies: {
+                  'EUR': 8882.50,
+                  'GBP': 7837.50,
+                  'JPY': 1567500.00,
+                  'CAD': 14107.50,
+                  'AUD': 15675.00,
+                  'CHF': 9405.00,
+                  'CNY': 73150.00,
+                  'INR': 867075.00,
+                  'BRL': 52250.00,
+                  'MXN': 188100.00,
+                  'KRW': 14107500.00,
+                  'SGD': 14107.50,
+                  'HKD': 81510.00
+                }
+              }
+            },
+            {
+              type: 'Cash Outflow',
+              expected: {
+                usd: 6500.00,
+                currencies: {
+                  'EUR': 5525.00,
+                  'GBP': 4875.00,
+                  'JPY': 975000.00,
+                  'CAD': 8775.00,
+                  'AUD': 9750.00,
+                  'CHF': 5850.00,
+                  'CNY': 45500.00,
+                  'INR': 539250.00,
+                  'BRL': 32500.00,
+                  'MXN': 117000.00,
+                  'KRW': 8775000.00,
+                  'SGD': 8775.00,
+                  'HKD': 50700.00
+                }
+              },
+              arrived: {
+                usd: 7150.00,
+                currencies: {
+                  'EUR': 6077.50,
+                  'GBP': 5362.50,
+                  'JPY': 1072500.00,
+                  'CAD': 9652.50,
+                  'AUD': 10725.00,
+                  'CHF': 6435.00,
+                  'CNY': 50050.00,
+                  'INR': 593175.00,
+                  'BRL': 35750.00,
+                  'MXN': 128700.00,
+                  'KRW': 9652500.00,
+                  'SGD': 9652.50,
+                  'HKD': 55770.00
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      broker: 'JP Morgan',
+      funds: [
+        {
+          fund: 'Delta Fund',
+          types: [
+            {
+              type: 'Cash Inflow',
+              expected: {
+                usd: 11000.00,
+                currencies: {
+                  'EUR': 9350.00,
+                  'GBP': 8250.00,
+                  'JPY': 1650000.00,
+                  'CAD': 14850.00,
+                  'AUD': 16500.00,
+                  'CHF': 9900.00,
+                  'CNY': 77000.00,
+                  'INR': 913000.00,
+                  'BRL': 55000.00,
+                  'MXN': 198000.00,
+                  'KRW': 14850000.00,
+                  'SGD': 14850.00,
+                  'HKD': 85800.00
+                }
+              },
+              arrived: {
+                usd: 12100.00,
+                currencies: {
+                  'EUR': 10285.00,
+                  'GBP': 9075.00,
+                  'JPY': 1815000.00,
+                  'CAD': 16335.00,
+                  'AUD': 18150.00,
+                  'CHF': 10890.00,
+                  'CNY': 84700.00,
+                  'INR': 1004300.00,
+                  'BRL': 60500.00,
+                  'MXN': 217800.00,
+                  'KRW': 16335000.00,
+                  'SGD': 16335.00,
+                  'HKD': 94380.00
+                }
+              }
+            },
+            {
+              type: 'Cash Outflow',
+              expected: {
+                usd: 7500.00,
+                currencies: {
+                  'EUR': 6375.00,
+                  'GBP': 5625.00,
+                  'JPY': 1125000.00,
+                  'CAD': 10125.00,
+                  'AUD': 11250.00,
+                  'CHF': 6750.00,
+                  'CNY': 52500.00,
+                  'INR': 622500.00,
+                  'BRL': 37500.00,
+                  'MXN': 135000.00,
+                  'KRW': 10125000.00,
+                  'SGD': 10125.00,
+                  'HKD': 58500.00
+                }
+              },
+              arrived: {
+                usd: 8250.00,
+                currencies: {
+                  'EUR': 7012.50,
+                  'GBP': 6187.50,
+                  'JPY': 1237500.00,
+                  'CAD': 11137.50,
+                  'AUD': 12375.00,
+                  'CHF': 7425.00,
+                  'CNY': 57750.00,
+                  'INR': 684750.00,
+                  'BRL': 41250.00,
+                  'MXN': 148500.00,
+                  'KRW': 11137500.00,
+                  'SGD': 11137.50,
+                  'HKD': 64350.00
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+
 const mockFinanceBreakdown: FinanceBreakdown = {
   summary: mockFinanceSummary,
   breakdown: [
@@ -1312,6 +1589,29 @@ class MockClient {
     // For mock purposes, we return the same breakdown data
     return {
       breakdown: mockFinanceBreakdown.breakdown
+    }
+  }
+
+  // Cash Flow endpoints
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async getCashFlowSummary(filters: FinanceFilters): Promise<{ summary: FinanceSummary }> {
+    await this.delay()
+    
+    // In a real implementation, this would filter based on the provided filters
+    // For mock purposes, we return the same cash flow summary data
+    return {
+      summary: mockCashFlowSummary
+    }
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async getCashFlowBreakdown(filters: FinanceFilters): Promise<{ breakdown: FinanceBreakdown['breakdown'] }> {
+    await this.delay()
+    
+    // In a real implementation, this would filter based on the provided filters
+    // For mock purposes, we return the same cash flow breakdown data
+    return {
+      breakdown: mockCashFlowBreakdown.breakdown
     }
   }
 }
