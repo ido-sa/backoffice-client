@@ -100,7 +100,17 @@ const mockFinanceBreakdown: FinanceBreakdown = {
                 currencies: {
                   'EUR': 12750.00,
                   'GBP': 11250.00,
-                  'JPY': 2250000.00
+                  'JPY': 2250000.00,
+                  'CAD': 20250.00,
+                  'AUD': 22500.00,
+                  'CHF': 13500.00,
+                  'CNY': 105000.00,
+                  'INR': 1245000.00,
+                  'BRL': 75000.00,
+                  'MXN': 270000.00,
+                  'KRW': 20250000.00,
+                  'SGD': 20250.00,
+                  'HKD': 117000.00
                 }
               },
               arrived: {
@@ -108,7 +118,17 @@ const mockFinanceBreakdown: FinanceBreakdown = {
                 currencies: {
                   'EUR': 14025.00,
                   'GBP': 12375.00,
-                  'JPY': 2475000.00
+                  'JPY': 2475000.00,
+                  'CAD': 22275.00,
+                  'AUD': 24750.00,
+                  'CHF': 14850.00,
+                  'CNY': 115500.00,
+                  'INR': 1369500.00,
+                  'BRL': 82500.00,
+                  'MXN': 297000.00,
+                  'KRW': 22275000.00,
+                  'SGD': 22275.00,
+                  'HKD': 128700.00
                 }
               }
             },
@@ -119,7 +139,17 @@ const mockFinanceBreakdown: FinanceBreakdown = {
                 currencies: {
                   'EUR': 7225.00,
                   'GBP': 6375.00,
-                  'JPY': 1275000.00
+                  'JPY': 1275000.00,
+                  'CAD': 11475.00,
+                  'AUD': 12750.00,
+                  'CHF': 7650.00,
+                  'CNY': 59500.00,
+                  'INR': 705750.00,
+                  'BRL': 42500.00,
+                  'MXN': 153000.00,
+                  'KRW': 11475000.00,
+                  'SGD': 11475.00,
+                  'HKD': 66300.00
                 }
               },
               arrived: {
@@ -127,7 +157,17 @@ const mockFinanceBreakdown: FinanceBreakdown = {
                 currencies: {
                   'EUR': 7820.00,
                   'GBP': 6900.00,
-                  'JPY': 1380000.00
+                  'JPY': 1380000.00,
+                  'CAD': 12420.00,
+                  'AUD': 13800.00,
+                  'CHF': 8280.00,
+                  'CNY': 64400.00,
+                  'INR': 763800.00,
+                  'BRL': 46000.00,
+                  'MXN': 165600.00,
+                  'KRW': 12420000.00,
+                  'SGD': 12420.00,
+                  'HKD': 71760.00
                 }
               }
             },
@@ -138,7 +178,17 @@ const mockFinanceBreakdown: FinanceBreakdown = {
                 currencies: {
                   'EUR': 2720.00,
                   'GBP': 2400.00,
-                  'JPY': 480000.00
+                  'JPY': 480000.00,
+                  'CAD': 4320.00,
+                  'AUD': 4800.00,
+                  'CHF': 2880.00,
+                  'CNY': 22400.00,
+                  'INR': 265600.00,
+                  'BRL': 16000.00,
+                  'MXN': 57600.00,
+                  'KRW': 4320000.00,
+                  'SGD': 4320.00,
+                  'HKD': 24960.00
                 }
               }
             }
@@ -154,7 +204,17 @@ const mockFinanceBreakdown: FinanceBreakdown = {
                 currencies: {
                   'EUR': 21250.00,
                   'GBP': 18750.00,
-                  'JPY': 3750000.00
+                  'JPY': 3750000.00,
+                  'CAD': 33750.00,
+                  'AUD': 37500.00,
+                  'CHF': 22500.00,
+                  'CNY': 175000.00,
+                  'INR': 2075000.00,
+                  'BRL': 125000.00,
+                  'MXN': 450000.00,
+                  'KRW': 33750000.00,
+                  'SGD': 33750.00,
+                  'HKD': 195000.00
                 }
               }
             },
@@ -165,7 +225,17 @@ const mockFinanceBreakdown: FinanceBreakdown = {
                 currencies: {
                   'EUR': 106250.00,
                   'GBP': 93750.00,
-                  'JPY': 18750000.00
+                  'JPY': 18750000.00,
+                  'CAD': 168750.00,
+                  'AUD': 187500.00,
+                  'CHF': 112500.00,
+                  'CNY': 875000.00,
+                  'INR': 10375000.00,
+                  'BRL': 625000.00,
+                  'MXN': 2250000.00,
+                  'KRW': 168750000.00,
+                  'SGD': 168750.00,
+                  'HKD': 975000.00
                 }
               },
               arrived: {
@@ -173,7 +243,17 @@ const mockFinanceBreakdown: FinanceBreakdown = {
                 currencies: {
                   'EUR': 114750.00,
                   'GBP': 101250.00,
-                  'JPY': 20250000.00
+                  'JPY': 20250000.00,
+                  'CAD': 182250.00,
+                  'AUD': 202500.00,
+                  'CHF': 121500.00,
+                  'CNY': 945000.00,
+                  'INR': 11205000.00,
+                  'BRL': 675000.00,
+                  'MXN': 2430000.00,
+                  'KRW': 182250000.00,
+                  'SGD': 182250.00,
+                  'HKD': 1053000.00
                 }
               }
             }
@@ -194,7 +274,17 @@ const mockFinanceBreakdown: FinanceBreakdown = {
                 currencies: {
                   'EUR': 10200.00,
                   'GBP': 9000.00,
-                  'JPY': 1800000.00
+                  'JPY': 1800000.00,
+                  'CAD': 16200.00,
+                  'AUD': 18000.00,
+                  'CHF': 10800.00,
+                  'CNY': 84000.00,
+                  'INR': 996000.00,
+                  'BRL': 60000.00,
+                  'MXN': 216000.00,
+                  'KRW': 16200000.00,
+                  'SGD': 16200.00,
+                  'HKD': 93600.00
                 }
               },
               arrived: {
@@ -202,7 +292,17 @@ const mockFinanceBreakdown: FinanceBreakdown = {
                 currencies: {
                   'EUR': 11050.00,
                   'GBP': 9750.00,
-                  'JPY': 1950000.00
+                  'JPY': 1950000.00,
+                  'CAD': 17550.00,
+                  'AUD': 19500.00,
+                  'CHF': 11700.00,
+                  'CNY': 91000.00,
+                  'INR': 1079000.00,
+                  'BRL': 65000.00,
+                  'MXN': 234000.00,
+                  'KRW': 17550000.00,
+                  'SGD': 17550.00,
+                  'HKD': 101400.00
                 }
               }
             },
@@ -213,7 +313,17 @@ const mockFinanceBreakdown: FinanceBreakdown = {
                 currencies: {
                   'EUR': 7225.00,
                   'GBP': 6375.00,
-                  'JPY': 1275000.00
+                  'JPY': 1275000.00,
+                  'CAD': 11475.00,
+                  'AUD': 12750.00,
+                  'CHF': 7650.00,
+                  'CNY': 59500.00,
+                  'INR': 705750.00,
+                  'BRL': 42500.00,
+                  'MXN': 153000.00,
+                  'KRW': 11475000.00,
+                  'SGD': 11475.00,
+                  'HKD': 66300.00
                 }
               }
             }
@@ -229,7 +339,17 @@ const mockFinanceBreakdown: FinanceBreakdown = {
                 currencies: {
                   'EUR': 72250.00,
                   'GBP': 63750.00,
-                  'JPY': 12750000.00
+                  'JPY': 12750000.00,
+                  'CAD': 114750.00,
+                  'AUD': 127500.00,
+                  'CHF': 76500.00,
+                  'CNY': 595000.00,
+                  'INR': 7057500.00,
+                  'BRL': 425000.00,
+                  'MXN': 1530000.00,
+                  'KRW': 114750000.00,
+                  'SGD': 114750.00,
+                  'HKD': 663000.00
                 }
               },
               arrived: {
@@ -237,7 +357,17 @@ const mockFinanceBreakdown: FinanceBreakdown = {
                 currencies: {
                   'EUR': 78200.00,
                   'GBP': 69000.00,
-                  'JPY': 13800000.00
+                  'JPY': 13800000.00,
+                  'CAD': 124200.00,
+                  'AUD': 138000.00,
+                  'CHF': 82800.00,
+                  'CNY': 644000.00,
+                  'INR': 7638000.00,
+                  'BRL': 460000.00,
+                  'MXN': 1656000.00,
+                  'KRW': 124200000.00,
+                  'SGD': 124200.00,
+                  'HKD': 717600.00
                 }
               }
             }
@@ -258,7 +388,17 @@ const mockFinanceBreakdown: FinanceBreakdown = {
                 currencies: {
                   'EUR': 4675.00,
                   'GBP': 4125.00,
-                  'JPY': 825000.00
+                  'JPY': 825000.00,
+                  'CAD': 7425.00,
+                  'AUD': 8250.00,
+                  'CHF': 4950.00,
+                  'CNY': 38500.00,
+                  'INR': 456500.00,
+                  'BRL': 27500.00,
+                  'MXN': 99000.00,
+                  'KRW': 7425000.00,
+                  'SGD': 7425.00,
+                  'HKD': 42900.00
                 }
               },
               arrived: {
@@ -266,7 +406,17 @@ const mockFinanceBreakdown: FinanceBreakdown = {
                 currencies: {
                   'EUR': 5100.00,
                   'GBP': 4500.00,
-                  'JPY': 900000.00
+                  'JPY': 900000.00,
+                  'CAD': 8100.00,
+                  'AUD': 9000.00,
+                  'CHF': 5400.00,
+                  'CNY': 42000.00,
+                  'INR': 498000.00,
+                  'BRL': 30000.00,
+                  'MXN': 108000.00,
+                  'KRW': 8100000.00,
+                  'SGD': 8100.00,
+                  'HKD': 46800.00
                 }
               }
             },
@@ -277,7 +427,17 @@ const mockFinanceBreakdown: FinanceBreakdown = {
                 currencies: {
                   'EUR': 2975.00,
                   'GBP': 2625.00,
-                  'JPY': 525000.00
+                  'JPY': 525000.00,
+                  'CAD': 4725.00,
+                  'AUD': 5250.00,
+                  'CHF': 3150.00,
+                  'CNY': 24500.00,
+                  'INR': 290500.00,
+                  'BRL': 17500.00,
+                  'MXN': 63000.00,
+                  'KRW': 4725000.00,
+                  'SGD': 4725.00,
+                  'HKD': 27300.00
                 }
               }
             }
@@ -293,7 +453,17 @@ const mockFinanceBreakdown: FinanceBreakdown = {
                 currencies: {
                   'EUR': 15300.00,
                   'GBP': 13500.00,
-                  'JPY': 2700000.00
+                  'JPY': 2700000.00,
+                  'CAD': 24300.00,
+                  'AUD': 27000.00,
+                  'CHF': 16200.00,
+                  'CNY': 126000.00,
+                  'INR': 1494000.00,
+                  'BRL': 90000.00,
+                  'MXN': 324000.00,
+                  'KRW': 24300000.00,
+                  'SGD': 24300.00,
+                  'HKD': 140400.00
                 }
               },
               arrived: {
@@ -301,7 +471,17 @@ const mockFinanceBreakdown: FinanceBreakdown = {
                 currencies: {
                   'EUR': 16575.00,
                   'GBP': 14625.00,
-                  'JPY': 2925000.00
+                  'JPY': 2925000.00,
+                  'CAD': 26325.00,
+                  'AUD': 29250.00,
+                  'CHF': 17550.00,
+                  'CNY': 136500.00,
+                  'INR': 1618500.00,
+                  'BRL': 97500.00,
+                  'MXN': 351000.00,
+                  'KRW': 26325000.00,
+                  'SGD': 26325.00,
+                  'HKD': 152100.00
                 }
               }
             }

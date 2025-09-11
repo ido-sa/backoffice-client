@@ -190,14 +190,64 @@ const FinanceBreakdownTable: React.FC<FinanceBreakdownTableProps> = ({
       }
     }
 
-    // For collapsed rows, aggregate child values
-    const children = tableData.filter(child => child.parentId === row.id)
-    return children.reduce((sum, child) => {
-      if (child.level === 'expected' || child.level === 'arrived') {
-        return sum + getAggregatedValue(child, currency)
-      }
-      return sum + getAggregatedValue(child, currency)
+    // For collapsed rows, we need to access the original data structure
+    if (!breakdown) return 0
+
+    if (row.level === 'broker') {
+      const brokerIndex = parseInt(row.id.split('-')[1])
+      const broker = breakdown[brokerIndex]
+      if (!broker) return 0
+
+      return broker.funds.reduce((sum, fund) => {
+        return sum + getFundAggregatedValue(fund, currency)
+      }, 0)
+    }
+
+    if (row.level === 'fund') {
+      const [, brokerIndex, fundIndex] = row.id.split('-').map(Number)
+      const fund = breakdown[brokerIndex]?.funds[fundIndex]
+      if (!fund) return 0
+
+      return getFundAggregatedValue(fund, currency)
+    }
+
+    if (row.level === 'type') {
+      const [, brokerIndex, fundIndex, typeIndex] = row.id.split('-').map(Number)
+      const type = breakdown[brokerIndex]?.funds[fundIndex]?.types[typeIndex]
+      if (!type) return 0
+
+      return getTypeAggregatedValue(type, currency)
+    }
+
+    return 0
+  }
+
+  const getFundAggregatedValue = (fund: any, currency: string = 'USD'): number => {
+    return fund.types.reduce((sum: number, type: any) => {
+      return sum + getTypeAggregatedValue(type, currency)
     }, 0)
+  }
+
+  const getTypeAggregatedValue = (type: any, currency: string = 'USD'): number => {
+    let sum = 0
+    
+    if (type.expected) {
+      if (currency === 'USD') {
+        sum += type.expected.usd
+      } else {
+        sum += type.expected.currencies[currency] || 0
+      }
+    }
+    
+    if (type.arrived) {
+      if (currency === 'USD') {
+        sum += type.arrived.usd
+      } else {
+        sum += type.arrived.currencies[currency] || 0
+      }
+    }
+    
+    return sum
   }
 
   const toggleRowExpansion = (rowId: string) => {
@@ -253,7 +303,7 @@ const FinanceBreakdownTable: React.FC<FinanceBreakdownTableProps> = ({
       
       <StyledTableContainer>
         <Paper>
-          <table style={{ tableLayout: 'auto' }}>
+          <table style={{ tableLayout: 'fixed', width: '100%' }}>
           <TableHead>
             <TableRow>
               <StyledBrokerColumn>Broker</StyledBrokerColumn>
@@ -277,7 +327,7 @@ const FinanceBreakdownTable: React.FC<FinanceBreakdownTableProps> = ({
                   <StyledTypeCell><Skeleton variant="text" width="80%" /></StyledTypeCell>
                   <StyledExpectedArrivedCell><Skeleton variant="text" width="80%" /></StyledExpectedArrivedCell>
                   <StyledUsdCell><Skeleton variant="text" width="80%" /></StyledUsdCell>
-                  {currencies.map((currency, colIndex) => (
+                  {currencies.map((_, colIndex) => (
                     <StyledCurrencyCell key={colIndex}>
                       <Skeleton variant="text" width="80%" />
                     </StyledCurrencyCell>
@@ -379,7 +429,7 @@ const FinanceBreakdownTable: React.FC<FinanceBreakdownTableProps> = ({
                   <StyledUsdCell>
                     <StyledUsdText
                       style={{
-                        fontWeight: row.isExpanded === false ? 600 : 'normal',
+                        fontWeight: !expandedRows.has(row.id) ? 600 : 'normal',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
                         whiteSpace: 'nowrap',
@@ -387,7 +437,8 @@ const FinanceBreakdownTable: React.FC<FinanceBreakdownTableProps> = ({
                     >
                       {(() => {
                         const value = getAggregatedValue(row, 'USD')
-                        const showValue = row.level === 'expected' || row.level === 'arrived' || row.isExpanded === false
+                        const isCollapsed = !expandedRows.has(row.id)
+                        const showValue = row.level === 'expected' || row.level === 'arrived' || isCollapsed
                         return showValue ? formatCurrency(value, 'USD') : ''
                       })()}
                     </StyledUsdText>
@@ -405,7 +456,8 @@ const FinanceBreakdownTable: React.FC<FinanceBreakdownTableProps> = ({
                       >
                         {(() => {
                           const value = getAggregatedValue(row, currency)
-                          const showValue = row.level === 'expected' || row.level === 'arrived'
+                          const isCollapsed = !expandedRows.has(row.id)
+                          const showValue = row.level === 'expected' || row.level === 'arrived' || isCollapsed
                           return showValue ? formatCurrency(value, currency) : ''
                         })()}
                       </StyledCurrencyText>

@@ -84,88 +84,94 @@ export const StyledExpandButton = styled(IconButton)(() => ({
 
 // Column width styles
 export const StyledBrokerColumn = styled(StyledHeaderCell)(() => ({
-  width: '36px !important',
-  minWidth: '36px !important',
-  maxWidth: '36px !important',
-  flex: '0 0 36px',
+  width: '120px !important',
+  minWidth: '120px !important',
+  maxWidth: '120px !important',
 }))
 
 export const StyledFundColumn = styled(StyledHeaderCell)(() => ({
-  width: '36px !important',
-  minWidth: '36px !important',
-  maxWidth: '36px !important',
-  flex: '0 0 36px',
+  width: '120px !important',
+  minWidth: '120px !important',
+  maxWidth: '120px !important',
 }))
 
 export const StyledTypeColumn = styled(StyledHeaderCell)(() => ({
-  width: '36px !important',
-  minWidth: '36px !important',
-  maxWidth: '36px !important',
-  flex: '0 0 36px',
+  width: '120px !important',
+  minWidth: '120px !important',
+  maxWidth: '120px !important',
 }))
 
 export const StyledExpectedArrivedColumn = styled(StyledHeaderCell)(() => ({
-  width: '30px !important',
-  minWidth: '30px !important',
-  maxWidth: '30px !important',
-  flex: '0 0 30px',
+  width: '80px !important',
+  minWidth: '80px !important',
+  maxWidth: '80px !important',
 }))
 
 export const StyledUsdColumn = styled(StyledHeaderCell)(() => ({
-  width: '3%',
+  width: '100px !important',
+  minWidth: '100px !important',
+  maxWidth: '100px !important',
 }))
 
 export const StyledCurrencyColumn = styled(StyledHeaderCell)(() => ({
-  width: '2%',
+  width: '100px !important',
+  minWidth: '100px !important',
+  maxWidth: '100px !important',
 }))
 
 // Combined styles for table cells
 export const StyledBrokerCell = styled(StyledTableCell)(() => ({
-  width: '36px !important',
-  minWidth: '36px !important',
-  maxWidth: '36px !important',
-  flex: '0 0 36px',
+  width: '120px !important',
+  minWidth: '120px !important',
+  maxWidth: '120px !important',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
 }))
 
 export const StyledFundCell = styled(StyledTableCell)(() => ({
-  width: '36px !important',
-  minWidth: '36px !important',
-  maxWidth: '36px !important',
-  flex: '0 0 36px',
+  width: '120px !important',
+  minWidth: '120px !important',
+  maxWidth: '120px !important',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
 }))
 
 export const StyledTypeCell = styled(StyledTableCell)(() => ({
-  width: '36px !important',
-  minWidth: '36px !important',
-  maxWidth: '36px !important',
-  flex: '0 0 36px',
+  width: '120px !important',
+  minWidth: '120px !important',
+  maxWidth: '120px !important',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
 }))
 
 export const StyledExpectedArrivedCell = styled(StyledTableCell)(() => ({
-  width: '30px !important',
-  minWidth: '30px !important',
-  maxWidth: '30px !important',
-  flex: '0 0 30px',
+  width: '80px !important',
+  minWidth: '80px !important',
+  maxWidth: '80px !important',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
 }))
 
 export const StyledUsdCell = styled(StyledTableCell)(() => ({
-  width: '6%',
+  width: '100px !important',
+  minWidth: '100px !important',
+  maxWidth: '100px !important',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
 }))
 
 export const StyledCurrencyCell = styled(StyledTableCell)(() => ({
-  width: '4%',
+  width: '100px !important',
+  minWidth: '100px !important',
+  maxWidth: '100px !important',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
 }))
 
 // Special text styles for different levels
