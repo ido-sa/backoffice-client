@@ -39,6 +39,8 @@ interface FinanceBreakdownTableProps {
   breakdown?: BrokerData[]
   loading?: boolean
   error?: Error | null
+  hideExpectedArrivedColumn?: boolean
+  title?: string
 }
 
 interface TableRowData {
@@ -58,6 +60,8 @@ const FinanceBreakdownTable: React.FC<FinanceBreakdownTableProps> = ({
   breakdown,
   loading = false,
   error,
+  hideExpectedArrivedColumn = false,
+  title = 'Profit and Loss (Broken Down)',
 }) => {
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set())
 
@@ -298,7 +302,7 @@ const FinanceBreakdownTable: React.FC<FinanceBreakdownTableProps> = ({
   return (
     <StyledContainer>
       <StyledTitle variant="h6">
-        Profit and Loss (Broken Down)
+        {title}
       </StyledTitle>
       
       <StyledTableContainer>
@@ -309,7 +313,7 @@ const FinanceBreakdownTable: React.FC<FinanceBreakdownTableProps> = ({
               <StyledBrokerColumn>Broker</StyledBrokerColumn>
               <StyledFundColumn>Fund</StyledFundColumn>
               <StyledTypeColumn>Type</StyledTypeColumn>
-              <StyledExpectedArrivedColumn>E/A</StyledExpectedArrivedColumn>
+              {!hideExpectedArrivedColumn && <StyledExpectedArrivedColumn>E/A</StyledExpectedArrivedColumn>}
               <StyledUsdColumn>$</StyledUsdColumn>
               {currencies.map(currency => (
                 <StyledCurrencyColumn key={currency}>
@@ -325,7 +329,7 @@ const FinanceBreakdownTable: React.FC<FinanceBreakdownTableProps> = ({
                   <StyledBrokerCell><Skeleton variant="text" width="80%" /></StyledBrokerCell>
                   <StyledFundCell><Skeleton variant="text" width="80%" /></StyledFundCell>
                   <StyledTypeCell><Skeleton variant="text" width="80%" /></StyledTypeCell>
-                  <StyledExpectedArrivedCell><Skeleton variant="text" width="80%" /></StyledExpectedArrivedCell>
+                  {!hideExpectedArrivedColumn && <StyledExpectedArrivedCell><Skeleton variant="text" width="80%" /></StyledExpectedArrivedCell>}
                   <StyledUsdCell><Skeleton variant="text" width="80%" /></StyledUsdCell>
                   {currencies.map((_, colIndex) => (
                     <StyledCurrencyCell key={colIndex}>
@@ -413,17 +417,19 @@ const FinanceBreakdownTable: React.FC<FinanceBreakdownTableProps> = ({
                   </StyledTypeCell>
 
                   {/* Expected/Arrived Column */}
-                  <StyledExpectedArrivedCell>
-                    <StyledBrokerText
-                      style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                      }}
-                    >
-                      {row.level === 'expected' || row.level === 'arrived' ? row.expectedArrived : ''}
-                    </StyledBrokerText>
-                  </StyledExpectedArrivedCell>
+                  {!hideExpectedArrivedColumn && (
+                    <StyledExpectedArrivedCell>
+                      <StyledBrokerText
+                        style={{
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
+                        }}
+                      >
+                        {row.level === 'expected' || row.level === 'arrived' ? row.expectedArrived : ''}
+                      </StyledBrokerText>
+                    </StyledExpectedArrivedCell>
+                  )}
 
                   {/* USD Column */}
                   <StyledUsdCell>

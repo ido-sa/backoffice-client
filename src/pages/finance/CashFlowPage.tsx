@@ -89,6 +89,7 @@ const CashFlowPage: React.FC = () => {
         breakdown={breakdownQuery.data?.breakdown}
         loading={breakdownQuery.isLoading}
         error={breakdownQuery.error}
+        title="Cash Flow (Broken Down)"
       />
     </StyledPageContainer>
   )
