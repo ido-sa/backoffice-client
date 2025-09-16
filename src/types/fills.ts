@@ -12,6 +12,7 @@ export interface FillRow {
   excRef: string
   file?: string
   matchedIds: string[]
+  removed: boolean // Flag to indicate if fill is removed
 }
 
 export interface FillFilters {
@@ -59,15 +60,14 @@ export interface FillAddRequest {
   side: 'client' | 'broker'
   lots: number
   price: number
-  mode: Mode
   finalName: string
   time: string
-  excRef: string
+  excRef?: string // Made optional
   file?: string
   // Include filter values for context
   date: string
-  account?: string
-  instrument?: string
+  account: string
+  instrument: string
   expiration?: string
   strike?: string
 }

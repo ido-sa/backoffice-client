@@ -4,11 +4,18 @@ import { Box, Button } from '@mui/material'
 export const StyledActionButtonsContainer = styled(Box)(({ theme }) => ({
   padding: theme.spacing(2),
   display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
+  flexDirection: 'column',
+  gap: theme.spacing(1),
   borderBottom: `1px solid ${theme.palette.divider}`,
   backgroundColor: theme.palette.background.paper,
-  minHeight: 64,
+  minHeight: 120,
+}))
+
+export const StyledButtonRow = styled(Box)(() => ({
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  minHeight: 48,
 }))
 
 export const StyledLeftButtonGroup = styled(Box)(() => ({

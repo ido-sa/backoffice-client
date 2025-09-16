@@ -1,7 +1,8 @@
 import React from 'react'
-import { Stack, Button } from '@mui/material'
+import { Stack, Switch, FormControlLabel } from '@mui/material'
 import {
   StyledActionButtonsContainer,
+  StyledButtonRow,
   StyledLeftButtonGroup,
   StyledCenterButtonGroup,
   StyledRightButtonGroup,
@@ -13,14 +14,13 @@ interface FillsActionButtonsProps {
   canUnmatch: boolean
   onMatch: () => void
   onUnmatch: () => void
-  onClientAdd: () => void
-  onClientRemove: () => void
-  onClientRestore: () => void
+  onAdd: () => void
+  onRemove: () => void
+  onRestore: () => void
   onClientCopyToBroker: () => void
-  onBrokerAdd: () => void
-  onBrokerRemove: () => void
-  onBrokerRestore: () => void
   onBrokerCopyToFinal: () => void
+  showRemoved: boolean
+  onShowRemovedChange: (show: boolean) => void
   loading?: boolean
 }
 
@@ -29,45 +29,21 @@ const FillsActionButtons: React.FC<FillsActionButtonsProps> = ({
   canUnmatch,
   onMatch,
   onUnmatch,
-  onClientAdd,
-  onClientRemove,
-  onClientRestore,
+  onAdd,
+  onRemove,
+  onRestore,
   onClientCopyToBroker,
-  onBrokerAdd,
-  onBrokerRemove,
-  onBrokerRestore,
   onBrokerCopyToFinal,
+  showRemoved,
+  onShowRemovedChange,
   loading = false,
 }) => {
   return (
     <StyledActionButtonsContainer>
-      {/* Left side buttons - above Client's fills */}
-      <StyledLeftButtonGroup>
-        <Stack direction="row" spacing={1}>
-          <StyledActionButton
-            variant="outlined"
-            size="small"
-            onClick={onClientAdd}
-            disabled={loading}
-          >
-            Add
-          </StyledActionButton>
-          <StyledActionButton
-            variant="outlined"
-            size="small"
-            onClick={onClientRemove}
-            disabled={loading}
-          >
-            Remove
-          </StyledActionButton>
-          <StyledActionButton
-            variant="outlined"
-            size="small"
-            onClick={onClientRestore}
-            disabled={loading}
-          >
-            Restore
-          </StyledActionButton>
+      {/* Row 1: Add, Remove, Restore, Show Removed (center) + Copy buttons (left/right) */}
+      <StyledButtonRow>
+        {/* Left: Copy to Broker */}
+        <StyledLeftButtonGroup>
           <StyledActionButton
             variant="outlined"
             size="small"
@@ -76,58 +52,51 @@ const FillsActionButtons: React.FC<FillsActionButtonsProps> = ({
           >
             Copy to Broker
           </StyledActionButton>
-        </Stack>
-      </StyledLeftButtonGroup>
+        </StyledLeftButtonGroup>
 
-      {/* Center buttons - Match/Unmatch */}
-      <StyledCenterButtonGroup>
-        <Stack direction="row" spacing={2}>
-          <StyledActionButton
-            variant="contained"
-            color="primary"
-            onClick={onMatch}
-            disabled={!canMatch || loading}
-          >
-            Match
-          </StyledActionButton>
-          <StyledActionButton
-            variant="outlined"
-            color="secondary"
-            onClick={onUnmatch}
-            disabled={!canUnmatch || loading}
-          >
-            Unmatch
-          </StyledActionButton>
-        </Stack>
-      </StyledCenterButtonGroup>
+        {/* Center: Add, Remove, Restore, Show Removed */}
+        <StyledCenterButtonGroup>
+          <Stack direction="row" spacing={1} alignItems="center">
+            <StyledActionButton
+              variant="outlined"
+              size="small"
+              onClick={onAdd}
+              disabled={loading}
+            >
+              Add
+            </StyledActionButton>
+            <StyledActionButton
+              variant="outlined"
+              size="small"
+              onClick={onRemove}
+              disabled={loading}
+            >
+              Remove
+            </StyledActionButton>
+            <StyledActionButton
+              variant="outlined"
+              size="small"
+              onClick={onRestore}
+              disabled={loading}
+            >
+              Restore
+            </StyledActionButton>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={showRemoved}
+                  onChange={(e) => onShowRemovedChange(e.target.checked)}
+                  size="small"
+                />
+              }
+              label="Show Removed"
+              labelPlacement="end"
+            />
+          </Stack>
+        </StyledCenterButtonGroup>
 
-      {/* Right side buttons - above Broker's fills */}
-      <StyledRightButtonGroup>
-        <Stack direction="row" spacing={1}>
-          <StyledActionButton
-            variant="outlined"
-            size="small"
-            onClick={onBrokerAdd}
-            disabled={loading}
-          >
-            Add
-          </StyledActionButton>
-          <StyledActionButton
-            variant="outlined"
-            size="small"
-            onClick={onBrokerRemove}
-            disabled={loading}
-          >
-            Remove
-          </StyledActionButton>
-          <StyledActionButton
-            variant="outlined"
-            size="small"
-            onClick={onBrokerRestore}
-            disabled={loading}
-          >
-            Restore
-          </StyledActionButton>
+        {/* Right: Copy to Final */}
+        <StyledRightButtonGroup>
           <StyledActionButton
             variant="outlined"
             size="small"
@@ -136,8 +105,32 @@ const FillsActionButtons: React.FC<FillsActionButtonsProps> = ({
           >
             Copy to Final
           </StyledActionButton>
-        </Stack>
-      </StyledRightButtonGroup>
+        </StyledRightButtonGroup>
+      </StyledButtonRow>
+
+      {/* Row 2: Match/Unmatch (center) */}
+      <StyledButtonRow>
+        <StyledCenterButtonGroup>
+          <Stack direction="row" spacing={2}>
+            <StyledActionButton
+              variant="contained"
+              color="primary"
+              onClick={onMatch}
+              disabled={!canMatch || loading}
+            >
+              Match
+            </StyledActionButton>
+            <StyledActionButton
+              variant="outlined"
+              color="secondary"
+              onClick={onUnmatch}
+              disabled={!canUnmatch || loading}
+            >
+              Unmatch
+            </StyledActionButton>
+          </Stack>
+        </StyledCenterButtonGroup>
+      </StyledButtonRow>
     </StyledActionButtonsContainer>
   )
 }

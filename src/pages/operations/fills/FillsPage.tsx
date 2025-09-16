@@ -14,6 +14,7 @@ import AlertsPane from '@/components/common/AlertsPane'
 import FillsFilters from './FillsFilters'
 import FillsTables from './FillsTables'
 import FillsActionButtons from './FillsActionButtons'
+import FillAddModal from './FillAddModal'
 import { FillAlert } from '@/types/alerts'
 import { 
   FillFilters, 
@@ -36,6 +37,8 @@ const FillsPage: React.FC = () => {
   })
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
+  const [addModalOpen, setAddModalOpen] = useState<boolean>(false)
+  const [showRemoved, setShowRemoved] = useState<boolean>(false)
 
   const queryClient = useQueryClient()
 
@@ -190,37 +193,33 @@ const FillsPage: React.FC = () => {
   })
 
   // Fill action handlers
-  const handleClientAdd = () => {
-    // For Add, we create a new fill with default values and current filter context
-    const request: FillAddRequest = {
-      side: 'client',
-      lots: 1, // Default value
-      price: 0, // Default value - should be provided by user
-      mode: 'M', // Manual mode for new fills
-      finalName: '', // Should be provided by user
-      time: new Date().toTimeString().split(' ')[0], // Current time
-      excRef: '', // Should be provided by user
-      file: undefined,
-      // Include current filter values
-      date: filters.date,
-      account: filters.account,
-      instrument: filters.instrument,
-      expiration: filters.expiration,
-      strike: filters.strike,
-    }
-    addFillsMutation.mutate(request)
+  const handleAdd = () => {
+    setAddModalOpen(true)
   }
 
-  const handleClientRemove = () => {
+  const handleAddModalSubmit = (request: FillAddRequest) => {
+    addFillsMutation.mutate(request)
+    setAddModalOpen(false)
+  }
+
+  const handleAddModalClose = () => {
+    setAddModalOpen(false)
+  }
+
+  const handleRemove = () => {
+    // Combine selected fills from both sides
+    const allSelectedIds = [...reconciliation.selectedClientIds, ...reconciliation.selectedBrokerIds]
     const request: FillRemoveRequest = {
-      fillIds: reconciliation.selectedClientIds,
+      fillIds: allSelectedIds,
     }
     removeFillsMutation.mutate(request)
   }
 
-  const handleClientRestore = () => {
+  const handleRestore = () => {
+    // Combine selected fills from both sides
+    const allSelectedIds = [...reconciliation.selectedClientIds, ...reconciliation.selectedBrokerIds]
     const request: FillRestoreRequest = {
-      fillIds: reconciliation.selectedClientIds,
+      fillIds: allSelectedIds,
     }
     restoreFillsMutation.mutate(request)
   }
@@ -231,41 +230,6 @@ const FillsPage: React.FC = () => {
       targetSide: 'broker',
     }
     copyFillsMutation.mutate(request)
-  }
-
-  const handleBrokerAdd = () => {
-    // For Add, we create a new fill with default values and current filter context
-    const request: FillAddRequest = {
-      side: 'broker',
-      lots: 1, // Default value
-      price: 0, // Default value - should be provided by user
-      mode: 'M', // Manual mode for new fills
-      finalName: '', // Should be provided by user
-      time: new Date().toTimeString().split(' ')[0], // Current time
-      excRef: '', // Should be provided by user
-      file: undefined,
-      // Include current filter values
-      date: filters.date,
-      account: filters.account,
-      instrument: filters.instrument,
-      expiration: filters.expiration,
-      strike: filters.strike,
-    }
-    addFillsMutation.mutate(request)
-  }
-
-  const handleBrokerRemove = () => {
-    const request: FillRemoveRequest = {
-      fillIds: reconciliation.selectedBrokerIds,
-    }
-    removeFillsMutation.mutate(request)
-  }
-
-  const handleBrokerRestore = () => {
-    const request: FillRestoreRequest = {
-      fillIds: reconciliation.selectedBrokerIds,
-    }
-    restoreFillsMutation.mutate(request)
   }
 
   const handleBrokerCopyToFinal = () => {
@@ -341,14 +305,13 @@ const FillsPage: React.FC = () => {
             canUnmatch={reconciliation.canUnmatch}
             onMatch={handleMatch}
             onUnmatch={handleUnmatch}
-            onClientAdd={handleClientAdd}
-            onClientRemove={handleClientRemove}
-            onClientRestore={handleClientRestore}
+            onAdd={handleAdd}
+            onRemove={handleRemove}
+            onRestore={handleRestore}
             onClientCopyToBroker={handleClientCopyToBroker}
-            onBrokerAdd={handleBrokerAdd}
-            onBrokerRemove={handleBrokerRemove}
-            onBrokerRestore={handleBrokerRestore}
             onBrokerCopyToFinal={handleBrokerCopyToFinal}
+            showRemoved={showRemoved}
+            onShowRemovedChange={setShowRemoved}
             loading={
               matchMutation.isPending || 
               unmatchMutation.isPending ||
@@ -367,6 +330,7 @@ const FillsPage: React.FC = () => {
               error={fillsQuery.error}
               onRowSelection={(row, side, isUnchecking) => reconciliation.handleRowSelection(row, side, isUnchecking)}
               isSelected={reconciliation.isSelected}
+              showRemoved={showRemoved}
             />
           </StyledTablesContainer>
         </StyledMainContentGrid>
@@ -394,6 +358,15 @@ const FillsPage: React.FC = () => {
           {successMessage}
         </StyledSuccessAlert>
       </Snackbar>
+
+      {/* Add Fill Modal */}
+      <FillAddModal
+        open={addModalOpen}
+        onClose={handleAddModalClose}
+        onSubmit={handleAddModalSubmit}
+        loading={addFillsMutation.isPending}
+        filters={filters}
+      />
     </StyledPageContainer>
   )
 }

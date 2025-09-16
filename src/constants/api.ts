@@ -30,6 +30,9 @@ export const API_ENDPOINTS = {
   FILLS_RESTORE: '/api/fills/restore',
   FILLS_COPY: '/api/fills/copy',
   
+  // Fill metadata
+  FILLS_FINAL_NAMES: '/api/fills/final-names',
+  
   // Optional reconciliation endpoints
   RECONCILIATION_MANUAL: '/api/reconciliation/manual',
   RECONCILIATION_GROUPS: '/api/reconciliation/groups',

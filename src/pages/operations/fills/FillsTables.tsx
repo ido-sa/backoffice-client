@@ -33,6 +33,7 @@ interface FillsTablesProps {
   error?: Error | null
   onRowSelection?: (row: FillRow, side: 'client' | 'broker', isUnchecking?: boolean) => void
   isSelected?: (id: string) => boolean
+  showRemoved?: boolean
 }
 
 const FillsTables: React.FC<FillsTablesProps> = ({
@@ -42,7 +43,16 @@ const FillsTables: React.FC<FillsTablesProps> = ({
   error = null,
   onRowSelection,
   isSelected,
+  showRemoved = false,
 }) => {
+  // Filter fills based on showRemoved toggle
+  const filteredClientFills = showRemoved 
+    ? clientFills 
+    : clientFills.filter(fill => !fill.removed)
+  
+  const filteredBrokerFills = showRemoved 
+    ? brokerFills 
+    : brokerFills.filter(fill => !fill.removed)
   const handleRowClick = (row: FillRow, side: 'client' | 'broker') => {
     if (onRowSelection) {
       onRowSelection(row, side)
@@ -92,7 +102,7 @@ const FillsTables: React.FC<FillsTablesProps> = ({
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {clientFills.map((row) => (
+                    {filteredClientFills.map((row) => (
                       <React.Fragment key={row.id}>
                         {isSelected && isSelected(row.id) ? (
                           <StyledSelectedTableRow
@@ -169,7 +179,7 @@ const FillsTables: React.FC<FillsTablesProps> = ({
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {brokerFills.map((row) => (
+                    {filteredBrokerFills.map((row) => (
                       <React.Fragment key={row.id}>
                         {isSelected && isSelected(row.id) ? (
                           <StyledSelectedTableRow

@@ -51,6 +51,11 @@ class FillsApiClient extends ApiClient {
   async copyFills(request: FillCopyRequest): Promise<FillActionResponse> {
     return this.post<FillActionResponse>(API_ENDPOINTS.FILLS_COPY, request)
   }
+
+  // Fill metadata methods
+  async getFinalNames(instrumentId: string): Promise<string[]> {
+    return this.get<string[]>(API_ENDPOINTS.FILLS_FINAL_NAMES, { instrumentId })
+  }
 }
 
 export default new FillsApiClient()

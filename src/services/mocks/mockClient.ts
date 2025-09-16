@@ -1187,6 +1187,7 @@ class MockClient {
         excRef: 'X12345',
         file: '/files/client/fills/2025-05-12/cf_001.csv',
         matchedIds: ['bf_001', 'bf_002'], // Matches with 2 broker fills
+        removed: false,
       },
       {
         id: 'cf_002',
@@ -1200,6 +1201,7 @@ class MockClient {
         excRef: 'X12346',
         file: '/files/client/fills/2025-05-12/cf_002.csv',
         matchedIds: ['bf_003'], // Matches with 1 broker fill
+        removed: false,
       },
       {
         id: 'cf_003',
@@ -1213,6 +1215,7 @@ class MockClient {
         excRef: 'X12347',
         file: '/files/client/fills/2025-05-12/cf_003.csv',
         matchedIds: [], // No matches
+        removed: false,
       },
       {
         id: 'cf_004',
@@ -1226,6 +1229,7 @@ class MockClient {
         excRef: 'X12348',
         file: '/files/client/fills/2025-05-12/cf_004.csv',
         matchedIds: ['bf_004', 'bf_005', 'bf_006'], // Matches with 3 broker fills
+        removed: false,
       },
       {
         id: 'cf_005',
@@ -1239,6 +1243,7 @@ class MockClient {
         excRef: 'X12349',
         file: '/files/client/fills/2025-05-12/cf_005.csv',
         matchedIds: ['bf_007'], // Matches with 1 broker fill
+        removed: false,
       },
       {
         id: 'cf_006',
@@ -1252,6 +1257,7 @@ class MockClient {
         excRef: 'X12350',
         file: '/files/client/fills/2025-05-12/cf_006.csv',
         matchedIds: [], // No matches
+        removed: false,
       },
       {
         id: 'cf_007',
@@ -1265,6 +1271,7 @@ class MockClient {
         excRef: 'X12351',
         file: '/files/client/fills/2025-05-12/cf_007.csv',
         matchedIds: ['bf_008'], // Matches with 1 broker fill
+        removed: false,
       },
       {
         id: 'cf_008',
@@ -1278,6 +1285,22 @@ class MockClient {
         excRef: 'X12352',
         file: '/files/client/fills/2025-05-12/cf_008.csv',
         matchedIds: ['bf_009', 'bf_010'], // Matches with 2 broker fills
+        removed: false,
+      },
+      // Add some removed fills for testing
+      {
+        id: 'cf_removed_001',
+        reconciled: 'No',
+        side: 'Buy',
+        lots: 2,
+        price: 4285.00,
+        mode: 'M',
+        finalName: 'ES.JUN25.5200',
+        time: '15:00:00',
+        excRef: 'X99999',
+        file: '/files/client/fills/2025-05-12/cf_removed_001.csv',
+        matchedIds: [],
+        removed: true,
       },
     ]
 
@@ -1306,6 +1329,7 @@ class MockClient {
         excRef: 'X12345',
         file: '/files/fills/2025-05-12/bf_001.csv',
         matchedIds: ['cf_001'], // Matches with client fill
+        removed: false,
       },
       {
         id: 'bf_002',
@@ -1319,6 +1343,7 @@ class MockClient {
         excRef: 'X12345',
         file: '/files/fills/2025-05-12/bf_002.csv',
         matchedIds: ['cf_001'], // Matches with same client fill
+        removed: false,
       },
       {
         id: 'bf_003',
@@ -1332,6 +1357,7 @@ class MockClient {
         excRef: 'X12346',
         file: '/files/fills/2025-05-12/bf_003.csv',
         matchedIds: ['cf_002'], // Matches with client fill
+        removed: false,
       },
       {
         id: 'bf_004',
@@ -1345,6 +1371,7 @@ class MockClient {
         excRef: 'X12348',
         file: '/files/fills/2025-05-12/bf_004.csv',
         matchedIds: ['cf_004'], // Matches with client fill
+        removed: false,
       },
       {
         id: 'bf_005',
@@ -1358,6 +1385,7 @@ class MockClient {
         excRef: 'X12348',
         file: '/files/fills/2025-05-12/bf_005.csv',
         matchedIds: ['cf_004'], // Matches with same client fill
+        removed: false,
       },
       {
         id: 'bf_006',
@@ -1371,6 +1399,7 @@ class MockClient {
         excRef: 'X12348',
         file: '/files/fills/2025-05-12/bf_006.csv',
         matchedIds: ['cf_004'], // Matches with same client fill
+        removed: false,
       },
       {
         id: 'bf_007',
@@ -1384,6 +1413,7 @@ class MockClient {
         excRef: 'X12349',
         file: '/files/fills/2025-05-12/bf_007.csv',
         matchedIds: ['cf_005'], // Matches with client fill
+        removed: false,
       },
       {
         id: 'bf_008',
@@ -1397,6 +1427,7 @@ class MockClient {
         excRef: 'X12351',
         file: '/files/fills/2025-05-12/bf_008.csv',
         matchedIds: ['cf_007'], // Matches with client fill
+        removed: false,
       },
       {
         id: 'bf_009',
@@ -1410,6 +1441,7 @@ class MockClient {
         excRef: 'X12352',
         file: '/files/fills/2025-05-12/bf_009.csv',
         matchedIds: ['cf_008'], // Matches with client fill
+        removed: false,
       },
       {
         id: 'bf_010',
@@ -1423,6 +1455,7 @@ class MockClient {
         excRef: 'X12352',
         file: '/files/fills/2025-05-12/bf_010.csv',
         matchedIds: ['cf_008'], // Matches with same client fill
+        removed: false,
       },
       {
         id: 'bf_011',
@@ -1436,6 +1469,7 @@ class MockClient {
         excRef: 'X12353',
         file: '/files/fills/2025-05-12/bf_011.csv',
         matchedIds: [], // No matches
+        removed: false,
       },
       {
         id: 'bf_012',
@@ -1449,6 +1483,22 @@ class MockClient {
         excRef: 'X12354',
         file: '/files/fills/2025-05-12/bf_012.csv',
         matchedIds: [], // No matches
+        removed: false,
+      },
+      // Add some removed broker fills for testing
+      {
+        id: 'bf_removed_001',
+        reconciled: 'No',
+        side: 'Sell',
+        lots: 1,
+        price: 4286.00,
+        mode: 'M',
+        finalName: 'ES.JUN25.5500',
+        time: '15:01:00',
+        excRef: 'X99998',
+        file: '/files/fills/2025-05-12/bf_removed_001.csv',
+        matchedIds: [],
+        removed: true,
       },
     ]
 
@@ -1929,7 +1979,7 @@ class MockClient {
     await this.delay()
     
     // Validation: Check required fields for creating new fills
-    if (!request.side || !request.lots || !request.price || !request.mode || !request.finalName || !request.time || !request.excRef) {
+    if (!request.side || !request.lots || !request.price || !request.finalName || !request.time) {
       return {
         success: false,
         message: 'Missing required fields for creating new fill',
@@ -2021,6 +2071,63 @@ class MockClient {
       message: `Successfully copied ${request.fillIds.length} fills to ${request.targetSide}`,
       error: null
     }
+  }
+
+  // Fill metadata methods
+  async getFinalNames(instrumentId: string): Promise<string[]> {
+    await this.delay()
+    
+    // Validation: Check if instrument ID is provided
+    if (!instrumentId) {
+      return []
+    }
+    
+    // Mock final names based on instrument ID
+    // In a real implementation, this would query the database for actual final names
+    const mockFinalNames: Record<string, string[]> = {
+      'inst1': [ // ES
+        'ES.JUN25.4500',
+        'ES.JUN25.4600',
+        'ES.JUN25.4700',
+        'ES.JUN25.4800',
+        'ES.JUN25.4900',
+        'ES.JUN25.5000',
+        'ES.JUN25.5100',
+        'ES.JUN25.5200',
+        'ES.SEP25.4500',
+        'ES.SEP25.4600',
+        'ES.SEP25.4700',
+        'ES.SEP25.4800',
+        'ES.SEP25.4900',
+        'ES.SEP25.5000',
+        'ES.SEP25.5100',
+        'ES.SEP25.5200',
+      ],
+      'inst2': [ // NQ
+        'NQ.JUN25.15000',
+        'NQ.JUN25.15100',
+        'NQ.JUN25.15200',
+        'NQ.JUN25.15300',
+        'NQ.JUN25.15400',
+        'NQ.SEP25.15000',
+        'NQ.SEP25.15100',
+        'NQ.SEP25.15200',
+        'NQ.SEP25.15300',
+        'NQ.SEP25.15400',
+      ],
+      'inst3': [ // YM
+        'YM.JUN25.40000',
+        'YM.JUN25.40100',
+        'YM.JUN25.40200',
+        'YM.JUN25.40300',
+        'YM.SEP25.40000',
+        'YM.SEP25.40100',
+        'YM.SEP25.40200',
+        'YM.SEP25.40300',
+      ],
+    }
+    
+    return mockFinalNames[instrumentId] || []
   }
 }
 
