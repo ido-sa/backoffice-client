@@ -1,6 +1,15 @@
 import { PaginatedResponse, FilterOption } from '@/types/common'
 import { FillAlert, TransactionAlert } from '@/types/alerts'
-import { FillRow, FillMatchRequest, FillMatchResponse } from '@/types/fills'
+import { 
+  FillRow, 
+  FillMatchRequest, 
+  FillMatchResponse,
+  FillAddRequest,
+  FillRemoveRequest,
+  FillRestoreRequest,
+  FillCopyRequest,
+  FillActionResponse
+} from '@/types/fills'
 import { 
   ClientTransactionRow, 
   BrokerTransactionRow,
@@ -1912,6 +1921,105 @@ class MockClient {
     // For mock purposes, we return the same balance sheet breakdown data
     return {
       breakdown: mockBalanceSheetBreakdown.breakdown
+    }
+  }
+
+  // Fill action methods
+  async addFills(request: FillAddRequest): Promise<FillActionResponse> {
+    await this.delay()
+    
+    // Validation: Check required fields for creating new fills
+    if (!request.side || !request.lots || !request.price || !request.mode || !request.finalName || !request.time || !request.excRef) {
+      return {
+        success: false,
+        message: 'Missing required fields for creating new fill',
+        error: 'INVALID_REQUEST'
+      }
+    }
+    
+    // Validation: Check if side is valid
+    if (!['client', 'broker'].includes(request.side)) {
+      return {
+        success: false,
+        message: 'Invalid side. Must be "client" or "broker"',
+        error: 'INVALID_SIDE'
+      }
+    }
+    
+    // Success
+    return {
+      success: true,
+      message: `Successfully added new fill to ${request.side} side`,
+      error: null
+    }
+  }
+
+  async removeFills(request: FillRemoveRequest): Promise<FillActionResponse> {
+    await this.delay()
+    
+    // Validation: Check if fill IDs exist
+    if (!request.fillIds || request.fillIds.length === 0) {
+      return {
+        success: false,
+        message: 'No fill IDs provided',
+        error: 'INVALID_REQUEST'
+      }
+    }
+    
+    // Success
+    return {
+      success: true,
+      message: `Successfully removed ${request.fillIds.length} fills`,
+      error: null
+    }
+  }
+
+  async restoreFills(request: FillRestoreRequest): Promise<FillActionResponse> {
+    await this.delay()
+    
+    // Validation: Check if fill IDs exist
+    if (!request.fillIds || request.fillIds.length === 0) {
+      return {
+        success: false,
+        message: 'No fill IDs provided',
+        error: 'INVALID_REQUEST'
+      }
+    }
+    
+    // Success
+    return {
+      success: true,
+      message: `Successfully restored ${request.fillIds.length} fills`,
+      error: null
+    }
+  }
+
+  async copyFills(request: FillCopyRequest): Promise<FillActionResponse> {
+    await this.delay()
+    
+    // Validation: Check if fill IDs exist
+    if (!request.fillIds || request.fillIds.length === 0) {
+      return {
+        success: false,
+        message: 'No fill IDs provided',
+        error: 'INVALID_REQUEST'
+      }
+    }
+    
+    // Validation: Check if target side is valid
+    if (!request.targetSide || !['client', 'broker'].includes(request.targetSide)) {
+      return {
+        success: false,
+        message: 'Invalid target side. Must be "client" or "broker"',
+        error: 'INVALID_TARGET_SIDE'
+      }
+    }
+    
+    // Success
+    return {
+      success: true,
+      message: `Successfully copied ${request.fillIds.length} fills to ${request.targetSide}`,
+      error: null
     }
   }
 }

@@ -13,9 +13,16 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import AlertsPane from '@/components/common/AlertsPane'
 import FillsFilters from './FillsFilters'
 import FillsTables from './FillsTables'
-import ReconciliationButtons from '@/components/common/ReconciliationButtons'
+import FillsActionButtons from './FillsActionButtons'
 import { FillAlert } from '@/types/alerts'
-import { FillFilters, FillMatchRequest } from '@/types/fills'
+import { 
+  FillFilters, 
+  FillMatchRequest,
+  FillAddRequest,
+  FillRemoveRequest,
+  FillRestoreRequest,
+  FillCopyRequest
+} from '@/types/fills'
 import { useFillsAlerts, useFillsData } from './hooks/useFillsData'
 import { fillsAlertColumns } from './constants'
 import { useReconciliation } from '@/hooks/useReconciliation'
@@ -117,6 +124,158 @@ const FillsPage: React.FC = () => {
     unmatchMutation.mutate(request)
   }
 
+  // Fill action mutations
+  const addFillsMutation = useMutation({
+    mutationFn: (request: FillAddRequest) => mockClient.addFills(request),
+    onSuccess: (response) => {
+      if (response.success) {
+        setSuccessMessage(response.message)
+        reconciliation.clearSelection()
+        queryClient.invalidateQueries({ queryKey: ['fills', filters] })
+      } else {
+        setErrorMessage(response.message)
+      }
+    },
+    onError: (error) => {
+      setErrorMessage(error.message || 'Failed to add fills')
+    },
+  })
+
+  const removeFillsMutation = useMutation({
+    mutationFn: (request: FillRemoveRequest) => mockClient.removeFills(request),
+    onSuccess: (response) => {
+      if (response.success) {
+        setSuccessMessage(response.message)
+        reconciliation.clearSelection()
+        queryClient.invalidateQueries({ queryKey: ['fills', filters] })
+      } else {
+        setErrorMessage(response.message)
+      }
+    },
+    onError: (error) => {
+      setErrorMessage(error.message || 'Failed to remove fills')
+    },
+  })
+
+  const restoreFillsMutation = useMutation({
+    mutationFn: (request: FillRestoreRequest) => mockClient.restoreFills(request),
+    onSuccess: (response) => {
+      if (response.success) {
+        setSuccessMessage(response.message)
+        reconciliation.clearSelection()
+        queryClient.invalidateQueries({ queryKey: ['fills', filters] })
+      } else {
+        setErrorMessage(response.message)
+      }
+    },
+    onError: (error) => {
+      setErrorMessage(error.message || 'Failed to restore fills')
+    },
+  })
+
+  const copyFillsMutation = useMutation({
+    mutationFn: (request: FillCopyRequest) => mockClient.copyFills(request),
+    onSuccess: (response) => {
+      if (response.success) {
+        setSuccessMessage(response.message)
+        reconciliation.clearSelection()
+        queryClient.invalidateQueries({ queryKey: ['fills', filters] })
+      } else {
+        setErrorMessage(response.message)
+      }
+    },
+    onError: (error) => {
+      setErrorMessage(error.message || 'Failed to copy fills')
+    },
+  })
+
+  // Fill action handlers
+  const handleClientAdd = () => {
+    // For Add, we create a new fill with default values and current filter context
+    const request: FillAddRequest = {
+      side: 'client',
+      lots: 1, // Default value
+      price: 0, // Default value - should be provided by user
+      mode: 'M', // Manual mode for new fills
+      finalName: '', // Should be provided by user
+      time: new Date().toTimeString().split(' ')[0], // Current time
+      excRef: '', // Should be provided by user
+      file: undefined,
+      // Include current filter values
+      date: filters.date,
+      account: filters.account,
+      instrument: filters.instrument,
+      expiration: filters.expiration,
+      strike: filters.strike,
+    }
+    addFillsMutation.mutate(request)
+  }
+
+  const handleClientRemove = () => {
+    const request: FillRemoveRequest = {
+      fillIds: reconciliation.selectedClientIds,
+    }
+    removeFillsMutation.mutate(request)
+  }
+
+  const handleClientRestore = () => {
+    const request: FillRestoreRequest = {
+      fillIds: reconciliation.selectedClientIds,
+    }
+    restoreFillsMutation.mutate(request)
+  }
+
+  const handleClientCopyToBroker = () => {
+    const request: FillCopyRequest = {
+      fillIds: reconciliation.selectedClientIds,
+      targetSide: 'broker',
+    }
+    copyFillsMutation.mutate(request)
+  }
+
+  const handleBrokerAdd = () => {
+    // For Add, we create a new fill with default values and current filter context
+    const request: FillAddRequest = {
+      side: 'broker',
+      lots: 1, // Default value
+      price: 0, // Default value - should be provided by user
+      mode: 'M', // Manual mode for new fills
+      finalName: '', // Should be provided by user
+      time: new Date().toTimeString().split(' ')[0], // Current time
+      excRef: '', // Should be provided by user
+      file: undefined,
+      // Include current filter values
+      date: filters.date,
+      account: filters.account,
+      instrument: filters.instrument,
+      expiration: filters.expiration,
+      strike: filters.strike,
+    }
+    addFillsMutation.mutate(request)
+  }
+
+  const handleBrokerRemove = () => {
+    const request: FillRemoveRequest = {
+      fillIds: reconciliation.selectedBrokerIds,
+    }
+    removeFillsMutation.mutate(request)
+  }
+
+  const handleBrokerRestore = () => {
+    const request: FillRestoreRequest = {
+      fillIds: reconciliation.selectedBrokerIds,
+    }
+    restoreFillsMutation.mutate(request)
+  }
+
+  const handleBrokerCopyToFinal = () => {
+    const request: FillCopyRequest = {
+      fillIds: reconciliation.selectedBrokerIds,
+      targetSide: 'client', // Copy to final means copy to client side
+    }
+    copyFillsMutation.mutate(request)
+  }
+
   const handleAlertClick = (alert: FillAlert) => {
     // Only proceed if all required queries have loaded
     if (!instrumentsQuery.data?.items || !expirationsQuery.data?.items || !strikesQuery.data?.items) {
@@ -177,12 +336,27 @@ const FillsPage: React.FC = () => {
             loading={fillsQuery.isLoading}
           />
           
-          <ReconciliationButtons
+          <FillsActionButtons
             canMatch={reconciliation.canMatch}
             canUnmatch={reconciliation.canUnmatch}
             onMatch={handleMatch}
             onUnmatch={handleUnmatch}
-            loading={matchMutation.isPending || unmatchMutation.isPending}
+            onClientAdd={handleClientAdd}
+            onClientRemove={handleClientRemove}
+            onClientRestore={handleClientRestore}
+            onClientCopyToBroker={handleClientCopyToBroker}
+            onBrokerAdd={handleBrokerAdd}
+            onBrokerRemove={handleBrokerRemove}
+            onBrokerRestore={handleBrokerRestore}
+            onBrokerCopyToFinal={handleBrokerCopyToFinal}
+            loading={
+              matchMutation.isPending || 
+              unmatchMutation.isPending ||
+              addFillsMutation.isPending ||
+              removeFillsMutation.isPending ||
+              restoreFillsMutation.isPending ||
+              copyFillsMutation.isPending
+            }
           />
           
           <StyledTablesContainer>

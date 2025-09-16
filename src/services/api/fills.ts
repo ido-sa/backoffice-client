@@ -1,7 +1,18 @@
 import ApiClient from './client'
 import { API_ENDPOINTS } from '@/constants/api'
 import { PaginatedResponse } from '@/types/common'
-import { FillRow, FillFilters, FillAlert, FillMatchRequest, FillMatchResponse } from '@/types/fills'
+import { 
+  FillRow, 
+  FillFilters, 
+  FillAlert, 
+  FillMatchRequest, 
+  FillMatchResponse,
+  FillAddRequest,
+  FillRemoveRequest,
+  FillRestoreRequest,
+  FillCopyRequest,
+  FillActionResponse
+} from '@/types/fills'
 
 class FillsApiClient extends ApiClient {
   async getFillAlerts(params: { page: number; pageSize: number }): Promise<PaginatedResponse<FillAlert>> {
@@ -22,6 +33,23 @@ class FillsApiClient extends ApiClient {
 
   async unmatchFills(request: FillMatchRequest): Promise<FillMatchResponse> {
     return this.post<FillMatchResponse>(API_ENDPOINTS.FILLS_UNMATCH, request)
+  }
+
+  // Fill action methods
+  async addFills(request: FillAddRequest): Promise<FillActionResponse> {
+    return this.post<FillActionResponse>(API_ENDPOINTS.FILLS_ADD, request)
+  }
+
+  async removeFills(request: FillRemoveRequest): Promise<FillActionResponse> {
+    return this.post<FillActionResponse>(API_ENDPOINTS.FILLS_REMOVE, request)
+  }
+
+  async restoreFills(request: FillRestoreRequest): Promise<FillActionResponse> {
+    return this.post<FillActionResponse>(API_ENDPOINTS.FILLS_RESTORE, request)
+  }
+
+  async copyFills(request: FillCopyRequest): Promise<FillActionResponse> {
+    return this.post<FillActionResponse>(API_ENDPOINTS.FILLS_COPY, request)
   }
 }
 

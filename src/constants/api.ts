@@ -24,6 +24,12 @@ export const API_ENDPOINTS = {
   TRANSACTIONS_MATCH: '/api/transactions/match',
   TRANSACTIONS_UNMATCH: '/api/transactions/unmatch',
   
+  // Fill actions
+  FILLS_ADD: '/api/fills/add',
+  FILLS_REMOVE: '/api/fills/remove',
+  FILLS_RESTORE: '/api/fills/restore',
+  FILLS_COPY: '/api/fills/copy',
+  
   // Optional reconciliation endpoints
   RECONCILIATION_MANUAL: '/api/reconciliation/manual',
   RECONCILIATION_GROUPS: '/api/reconciliation/groups',
